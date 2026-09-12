@@ -1,0 +1,75 @@
+# Rebuilds and publishes handyaddons.com after every change.
+#
+# What happens: GitHub takes the files, runs build.py to regenerate the HTML
+# pages from their texts, then publishes the site/ folder. Nothing is installed
+# beyond Python itself, which is already present on the runner.
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # also runnable by hand from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Regenerate the pages
+        run: python3 build.py
+
+      - name: Fail if a page came out broken
+        run: |
+          python3 - <<'PY'
+          import glob, pathlib, re, sys
+          root = pathlib.Path("site")
+          problems = []
+          pages = glob.glob("site/**/*.html", recursive=True)
+          if not pages:
+              problems.append("no pages were generated at all")
+          for f in pages:
+              t = pathlib.Path(f).read_text(encoding="utf-8")
+              if "<title>" not in t:
+                  problems.append(f"{f}: no <title>")
+              for m in re.finditer(r'(?:href|src)="(/[^":#]*)"', t):
+                  target = root / m.group(1).lstrip("/")
+                  if m.group(1).endswith("/"):
+                      target = target / "index.html"
+                  if not target.exists():
+                      problems.append(f"{f}: broken link to {m.group(1)}")
+          if not (root / "CNAME").exists():
+              problems.append("CNAME is missing — the custom domain would break")
+          if problems:
+              print("\n".join("  " + p for p in problems))
+              sys.exit(1)
+          print(f"{len(pages)} pages, no broken links, CNAME present")
+          PY
+
+      - uses: actions/configure-pages@v5
+        with:
+          # Turns Pages on by itself if it has not been switched on in
+          # Settings yet, so the very first run cannot fail on that alone.
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

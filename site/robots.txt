@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://handyaddons.com/sitemap.xml

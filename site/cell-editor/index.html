@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cell Editor — a real editor for Google Sheets cells | handyaddons</title>
+<meta name="description" content="Cell Editor replaces the Google Sheets formula bar with a full editor: colored syntax, live function hints, nine validation checks, 516 functions recognised, 25 languages. Free.">
+<link rel="canonical" href="https://handyaddons.com/cell-editor/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="handyaddons">
+<meta property="og:title" content="Cell Editor — a real editor for Google Sheets cells | handyaddons">
+<meta property="og:description" content="Cell Editor replaces the Google Sheets formula bar with a full editor: colored syntax, live function hints, nine validation checks, 516 functions recognised, 25 languages. Free.">
+<meta property="og:url" content="https://handyaddons.com/cell-editor/">
+<meta property="og:image" content="https://handyaddons.com/assets/brand/og-cell-editor.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="/assets/brand/handyaddons.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/handyaddons-32.png" sizes="32x32">
+<link rel="icon" href="/assets/brand/handyaddons-16.png" sizes="16x16">
+<link rel="apple-touch-icon" href="/assets/brand/handyaddons-apple-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&amp;family=Roboto+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Cell Editor",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web browser, Google Sheets",
+  "description": "A full editor for Google Sheets cells: colored formula syntax, live function hints and nine validation checks.",
+  "url": "https://handyaddons.com/cell-editor/",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "handyaddons", "url": "https://handyaddons.com/" }
+}
+</script>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
+    <nav aria-label="Sections">
+      <a href="/cell-editor/#features">Features</a>
+      <a href="/cell-editor/#formulas">Formulas</a>
+      <a href="/cell-editor/#functions">Functions</a>
+      <a href="/cell-editor/#checks">Checks</a>
+      <a href="/cell-editor/#cells">Cells</a>
+      <a href="/cell-editor/#screenshots">Screenshots</a>
+    </nav>
+    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install">Install (Coming Soon)</a>
+  </div>
+</header>
+<main id="main">
+
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow"><img src="/assets/brand/cell-editor-256.png" alt="" width="256" height="256"><span><b>Cell Editor</b> for Google Sheets</span></p>
+      <h1>The formula bar was never big enough.</h1>
+      <p class="lede">Cell Editor opens the cell you are editing into a full editor inside Google Sheets. Colored syntax, live function hints, and nine checks that catch a broken formula before it reaches the sheet.</p>
+      <div class="hero-actions">
+        <span class="btn-pending">Install (Coming Soon)</span>
+        <a class="btn btn-ghost" href="#screenshots">See it in the sheet</a>
+      </div>
+      <p class="free">Free. Google Sheets in a desktop browser.</p>
+    </div>
+
+    <div>
+      <p class="before-cap">What Sheets gives you</p>
+      <div class="fbar">
+        <span class="fx">fx</span>
+        <span class="line">=SORT(QUERY({Sale1!A2:C100; Sale2!A2:C100}, "select Col1, Col2, Col3 where Col1 is not null and Col2 &gt; 0", 0), 1, TRUE)</span>
+      </div>
+
+      <p class="after-cap">What Cell Editor gives you</p>
+      <div class="app unfold" id="hero-app">
+        <div class="app-head"><img src="/assets/brand/cell-editor-256.png" alt="" width="256" height="256"><b>Cell Editor</b><span class="x">&#10005;</span></div>
+        <div class="app-tools" aria-hidden="true">
+          <i class="dim">B</i><i class="dim">I</i><i class="dim">U</i><i class="dim">S</i><i class="dim">A</i><i class="dim">&#128279;</i>
+          <span class="app-sep"></span>
+          <i>&#8630;</i><i>&#8631;</i>
+          <span class="app-sep"></span>
+          <i class="wide">A&minus;</i><i class="wide">A+</i>
+          <span class="app-sep"></span>
+          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4"/><path d="M15 4v5h5"/><path d="M9 20v-5H4"/><path d="M15 20v-5h5"/></svg></i>
+          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg></i>
+        </div>
+        <div class="app-row">
+          <span class="pill">Result</span>
+          <span class="addr">A2</span>
+          <span class="arrows" aria-hidden="true"><span>&#9664;</span><span>&#9650;</span><span>&#9660;</span><span>&#9654;</span></span>
+          <span class="toggle">TEXT <span class="sw"></span><span class="on">FORMULA</span></span>
+        </div>
+        <div class="code-wrap">
+          <div class="ln" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10</div>
+<pre class="code"><span class="cl" style="--i:0"><span class="fn">=SORT</span>(</span>
+<span class="cl" style="--i:1">  <span class="fn">QUERY</span>(</span>
+<span class="cl" style="--i:2">    {</span>
+<span class="cl" style="--i:3">      <span class="ref">Sale1!A2:C100</span>;</span>
+<span class="cl" style="--i:4">      <span class="ref2">Sale2!A2:C100</span></span>
+<span class="cl" style="--i:5">    },</span>
+<span class="cl" style="--i:6">    <span class="str">"select Col1, Col2, Col3</span></span>
+<span class="cl" style="--i:7">     <span class="str">where Col1 is not null"</span>,</span>
+<span class="cl" style="--i:8">    <span class="num">0</span></span>
+<span class="cl" style="--i:9">  ), <span class="num">1</span>, <span class="str">TRUE</span>)</span></pre>
+        </div>
+        <div class="sig" aria-hidden="true"><span class="tfn">QUERY</span>(<span class="arg on">data</span>, <span class="arg">query</span>, <span class="arg">[headers]</span>)<span class="desc">Runs a SQL-like query over a range.</span></div>
+        <div class="result">Result: <b>Apple</b></div>
+        <div class="app-foot"><span>&#8594; Dock to sidebar</span><span>&#10003; Apply</span><span>&#128190; Save</span><span>&#10005; Close</span></div>
+        <div class="app-note">Argument separator <code>,</code> &middot; decimal <code>.</code> &middot; <code>Ctrl+Space</code> to pick a function</div>
+        <span class="grip" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap">
+    <div class="stat"><b data-count="516">516</b><span>functions recognised</span></div>
+    <div class="stat"><b data-count="16">16</b><span>categories of functions</span></div>
+    <div class="stat"><b data-count="9">9</b><span>validation checks</span></div>
+    <div class="stat"><b data-count="25">25</b><span>interface languages</span></div>
+    <div class="stat"><b>$0</b><span>now and later</span></div>
+  </div>
+</div>
+
+<section id="features" class="wrap">
+  <h2>Everything the formula bar left out</h2>
+  <p class="sec-lede">One editor, two modes. Rich text for notes and descriptions, a code editor for formulas — each with its own tools.</p>
+  <div class="feat reveal">
+    <div class="cellx"><h3>Sidebar or window</h3><p>A narrow panel that stays beside the sheet, or a wide resizable window for long content. One button switches, and your choice is remembered.</p></div>
+    <div class="cellx"><h3>Colored syntax</h3><p>Functions, references, numbers, strings and brackets each take their own color, and every distinct reference gets its own shade.</p></div>
+    <div class="cellx"><h3>Hints while you type</h3><p>Open a bracket and the function signature appears with the current argument highlighted, described in your spreadsheet's language.</p></div>
+    <div class="cellx"><h3>Pick ranges with the mouse</h3><p>Put the cursor where the address belongs, select cells on the sheet, and the reference lands in the formula — cross-sheet names quoted correctly.</p></div>
+    <div class="cellx"><h3>Move without closing</h3><p>Step to the next cell with the arrow keys or type an address to jump, across sheets. Unsaved changes are flagged before you leave.</p></div>
+    <div class="cellx"><h3>Scale the text</h3><p>Enlarge the editor's font without changing the size of the characters in the cell itself. Built for long sessions and for low vision.</p></div>
+    <div class="cellx"><h3>Rich text mode</h3><p>Bold, italic, underline, strikethrough, color, point sizes, lists, several hyperlinks inside one cell, and an emoji picker with search.</p></div>
+    <div class="cellx"><h3>Your locale decides</h3><p>Argument and decimal separators follow your spreadsheet's own setting, and the pair in force is always shown at the bottom of the window.</p></div>
+    <div class="cellx"><h3>Character counter</h3><p>It appears as content nears the 50 000 character cell limit and turns red past it, blocking the save rather than truncating silently.</p></div>
+  </div>
+</section>
+
+<section id="formulas" class="wrap">
+  <h2 class="reveal">Formulas you can actually read</h2>
+  <p class="sec-lede reveal">A nested QUERY inside a SORT is unreadable on one line. Broken across lines and colored by token, it is just a formula again.</p>
+  <figure class="figure-full reveal" data-full="/assets/screenshots/formula.webp">
+      <div class="shot-frame" style="aspect-ratio:1530/807">
+        <img src="/assets/screenshots/formula.webp" width="1530" height="807" loading="lazy" decoding="async" alt="Cell Editor open in a window over a Google Sheet, showing a nested SORT and QUERY formula with colored syntax and line numbers">
+      </div>
+      <figcaption>Formula mode in a resizable window, with the text zoom controls and the launcher icon marked</figcaption>
+    </figure>
+  <div class="points reveal">
+    <div>
+      <h3>Every reference in its own shade</h3>
+      <p>Two ranges from two different sheets take two different colors, so a repeated reference is obvious without reading character by character.</p>
+    </div>
+    <div>
+      <h3>Room to break it up</h3>
+      <p>Line numbers down the side and line breaks wherever you want them. Brackets and quotes are colored too, which is how a missing one becomes visible.</p>
+    </div>
+    <div>
+      <h3>The answer, as you type</h3>
+      <p>The result is recalculated and shown below the editor, and the separators in force are printed at the bottom of the window.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div class="split wide reveal">
+    <div>
+      <h3>Five hundred and sixteen functions, recognised by name</h3>
+      <p>Press Ctrl + Space to browse by category or start typing to match. Where a function has a described signature — 450 of them do — the hint shows it and links to Google's own reference page, opened in your language.</p>
+      <ul class="mini">
+        <li>Argument names stay in English, matching Google's documentation</li>
+        <li>Sixteen categories, from statistical to the AI function</li>
+        <li>Argument counts checked against the signature wherever one exists</li>
+      </ul>
+    </div>
+    <figure class="shot" data-full="/assets/screenshots/hints.webp">
+      <div class="shot-frame" style="aspect-ratio:932/812">
+        <img src="/assets/screenshots/hints.webp" width="932" height="812" loading="lazy" decoding="async" alt="A tooltip over the formula showing the QUERY signature with the data argument highlighted and a one-line description">
+      </div>
+      <figcaption>The signature of the function you are inside, with the current argument highlighted</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="functions" class="wrap">
+  <h2>Sixteen categories, 516 functions</h2>
+  <p class="sec-lede">The whole catalogue the editor recognises, used for autocompletion and for checking how many arguments you have passed. Open a category to see what is inside.</p>
+  <div class="cats reveal">
+    <details>
+      <summary>Statistical<span class="n">136</span></summary>
+      <div class="fns"><code>AVEDEV</code><code>AVERAGE</code><code>AVERAGE.WEIGHTED</code><code>AVERAGEA</code><code>AVERAGEIF</code><code>AVERAGEIFS</code><code>BETA.DIST</code><code>BETA.INV</code><code>BETADIST</code><code>BETAINV</code><code>BINOM.DIST</code><code>BINOM.INV</code><code>BINOMDIST</code><code>CHIDIST</code><code>CHIINV</code><code>CHISQ.DIST</code><code>CHISQ.DIST.RT</code><code>CHISQ.INV</code><code>CHISQ.INV.RT</code><code>CHISQ.TEST</code><code>CHITEST</code><code>CONFIDENCE</code><code>CONFIDENCE.NORM</code><code>CONFIDENCE.T</code><code>CORREL</code><code>COUNT</code><code>COUNTA</code><code>COVAR</code><code>COVARIANCE.P</code><code>COVARIANCE.S</code><code>CRITBINOM</code><code>DEVSQ</code><code>EXPON.DIST</code><code>EXPONDIST</code><code>F.DIST</code><code>F.DIST.RT</code><code>F.INV</code><code>F.INV.RT</code><code>F.TEST</code><code>FDIST</code><code>FINV</code><code>FISHER</code><code>FISHERINV</code><code>FORECAST</code><code>FORECAST.LINEAR</code><code>FTEST</code><code>GAMMA</code><code>GAMMA.DIST</code><code>GAMMA.INV</code><code>GAMMADIST</code><code>GAMMAINV</code><code>GAUSS</code><code>GEOMEAN</code><code>HARMEAN</code><code>HYPGEOM.DIST</code><code>HYPGEOMDIST</code><code>INTERCEPT</code><code>KURT</code><code>LARGE</code><code>LOGINV</code><code>LOGNORM.DIST</code><code>LOGNORM.INV</code><code>LOGNORMDIST</code><code>MARGINOFERROR</code><code>MAX</code><code>MAXA</code><code>MAXIFS</code><code>MEDIAN</code><code>MIN</code><code>MINA</code><code>MINIFS</code><code>MODE</code><code>MODE.MULT</code><code>MODE.SNGL</code><code>NEGBINOM.DIST</code><code>NEGBINOMDIST</code><code>NORM.DIST</code><code>NORM.INV</code><code>NORM.S.DIST</code><code>NORM.S.INV</code><code>NORMDIST</code><code>NORMINV</code><code>NORMSDIST</code><code>NORMSINV</code><code>PEARSON</code><code>PERCENTILE</code><code>PERCENTILE.EXC</code><code>PERCENTILE.INC</code><code>PERCENTRANK</code><code>PERCENTRANK.EXC</code><code>PERCENTRANK.INC</code><code>PERMUT</code><code>PERMUTATIONA</code><code>PHI</code><code>POISSON</code><code>POISSON.DIST</code><code>PROB</code><code>QUARTILE</code><code>QUARTILE.EXC</code><code>QUARTILE.INC</code><code>RANK</code><code>RANK.AVG</code><code>RANK.EQ</code><code>RSQ</code><code>SKEW</code><code>SKEW.P</code><code>SLOPE</code><code>SMALL</code><code>STANDARDIZE</code><code>STDEV</code><code>STDEV.P</code><code>STDEV.S</code><code>STDEVA</code><code>STDEVP</code><code>STDEVPA</code><code>STEYX</code><code>T.DIST</code><code>T.DIST.2T</code><code>T.DIST.RT</code><code>T.INV</code><code>T.INV.2T</code><code>T.TEST</code><code>TDIST</code><code>TINV</code><code>TRIMMEAN</code><code>TTEST</code><code>VAR</code><code>VAR.P</code><code>VAR.S</code><code>VARA</code><code>VARP</code><code>VARPA</code><code>WEIBULL</code><code>WEIBULL.DIST</code><code>Z.TEST</code><code>ZTEST</code></div>
+    </details>
+    <details>
+      <summary>Math<span class="n">83</span></summary>
+      <div class="fns"><code>ABS</code><code>ACOS</code><code>ACOSH</code><code>ACOT</code><code>ACOTH</code><code>ASIN</code><code>ASINH</code><code>ATAN</code><code>ATAN2</code><code>ATANH</code><code>BASE</code><code>CEILING</code><code>CEILING.MATH</code><code>CEILING.PRECISE</code><code>COMBIN</code><code>COMBINA</code><code>COS</code><code>COSH</code><code>COT</code><code>COTH</code><code>COUNTBLANK</code><code>COUNTIF</code><code>COUNTIFS</code><code>COUNTUNIQUE</code><code>CSC</code><code>CSCH</code><code>DECIMAL</code><code>DEGREES</code><code>ERFC.PRECISE</code><code>EVEN</code><code>EXP</code><code>FACT</code><code>FACTDOUBLE</code><code>FLOOR</code><code>FLOOR.MATH</code><code>FLOOR.PRECISE</code><code>GAMMALN</code><code>GAMMALN.PRECISE</code><code>GCD</code><code>IMLN</code><code>IMPOWER</code><code>IMSQRT</code><code>INT</code><code>ISEVEN</code><code>ISO.CEILING</code><code>ISODD</code><code>LCM</code><code>LN</code><code>LOG</code><code>LOG10</code><code>MOD</code><code>MROUND</code><code>MULTINOMIAL</code><code>MUNIT</code><code>ODD</code><code>PI</code><code>POWER</code><code>PRODUCT</code><code>QUOTIENT</code><code>RADIANS</code><code>RAND</code><code>RANDARRAY</code><code>RANDBETWEEN</code><code>ROUND</code><code>ROUNDDOWN</code><code>ROUNDUP</code><code>SEC</code><code>SECH</code><code>SEQUENCE</code><code>SERIESSUM</code><code>SIGN</code><code>SIN</code><code>SINH</code><code>SQRT</code><code>SQRTPI</code><code>SUBTOTAL</code><code>SUM</code><code>SUMIF</code><code>SUMIFS</code><code>SUMSQ</code><code>TAN</code><code>TANH</code><code>TRUNC</code></div>
+    </details>
+    <details>
+      <summary>Financial<span class="n">50</span></summary>
+      <div class="fns"><code>ACCRINT</code><code>ACCRINTM</code><code>AMORLINC</code><code>COUPDAYBS</code><code>COUPDAYS</code><code>COUPDAYSNC</code><code>COUPNCD</code><code>COUPNUM</code><code>COUPPCD</code><code>CUMIPMT</code><code>CUMPRINC</code><code>DB</code><code>DDB</code><code>DISC</code><code>DOLLARDE</code><code>DOLLARFR</code><code>DURATION</code><code>EFFECT</code><code>FV</code><code>FVSCHEDULE</code><code>INTRATE</code><code>IPMT</code><code>IRR</code><code>ISPMT</code><code>MDURATION</code><code>MIRR</code><code>NOMINAL</code><code>NPER</code><code>NPV</code><code>PDURATION</code><code>PMT</code><code>PPMT</code><code>PRICE</code><code>PRICEDISC</code><code>PRICEMAT</code><code>PV</code><code>RATE</code><code>RECEIVED</code><code>RRI</code><code>SLN</code><code>SYD</code><code>TBILLEQ</code><code>TBILLPRICE</code><code>TBILLYIELD</code><code>VDB</code><code>XIRR</code><code>XNPV</code><code>YIELD</code><code>YIELDDISC</code><code>YIELDMAT</code></div>
+    </details>
+    <details>
+      <summary>Engineering<span class="n">48</span></summary>
+      <div class="fns"><code>BIN2DEC</code><code>BIN2HEX</code><code>BIN2OCT</code><code>BITAND</code><code>BITLSHIFT</code><code>BITOR</code><code>BITRSHIFT</code><code>BITXOR</code><code>COMPLEX</code><code>DEC2BIN</code><code>DEC2HEX</code><code>DEC2OCT</code><code>DELTA</code><code>ERF</code><code>ERF.PRECISE</code><code>ERFC</code><code>GESTEP</code><code>HEX2BIN</code><code>HEX2DEC</code><code>HEX2OCT</code><code>IMABS</code><code>IMAGINARY</code><code>IMARGUMENT</code><code>IMCONJUGATE</code><code>IMCOS</code><code>IMCOSH</code><code>IMCOT</code><code>IMCOTH</code><code>IMCSC</code><code>IMCSCH</code><code>IMDIV</code><code>IMEXP</code><code>IMLOG</code><code>IMLOG10</code><code>IMLOG2</code><code>IMPRODUCT</code><code>IMREAL</code><code>IMSEC</code><code>IMSECH</code><code>IMSIN</code><code>IMSINH</code><code>IMSUB</code><code>IMSUM</code><code>IMTAN</code><code>IMTANH</code><code>OCT2BIN</code><code>OCT2DEC</code><code>OCT2HEX</code></div>
+    </details>
+    <details>
+      <summary>Text<span class="n">41</span></summary>
+      <div class="fns"><code>ARABIC</code><code>ASC</code><code>CHAR</code><code>CLEAN</code><code>CODE</code><code>CONCATENATE</code><code>DOLLAR</code><code>EXACT</code><code>FIND</code><code>FINDB</code><code>FIXED</code><code>JOIN</code><code>LEFT</code><code>LEFTB</code><code>LEN</code><code>LENB</code><code>LOWER</code><code>MID</code><code>MIDB</code><code>PROPER</code><code>REGEXEXTRACT</code><code>REGEXMATCH</code><code>REGEXREPLACE</code><code>REPLACE</code><code>REPLACEB</code><code>REPT</code><code>RIGHT</code><code>RIGHTB</code><code>ROMAN</code><code>SEARCH</code><code>SEARCHB</code><code>SPLIT</code><code>SUBSTITUTE</code><code>T</code><code>TEXT</code><code>TEXTJOIN</code><code>TRIM</code><code>UNICHAR</code><code>UNICODE</code><code>UPPER</code><code>VALUE</code></div>
+    </details>
+    <details>
+      <summary>Array<span class="n">30</span></summary>
+      <div class="fns"><code>ARRAY_CONSTRAIN</code><code>ARRAYFORMULA</code><code>BYCOL</code><code>BYROW</code><code>CHOOSECOLS</code><code>CHOOSEROWS</code><code>FLATTEN</code><code>FREQUENCY</code><code>GROWTH</code><code>HSTACK</code><code>LINEST</code><code>LOGEST</code><code>MAKEARRAY</code><code>MAP</code><code>MDETERM</code><code>MINVERSE</code><code>MMULT</code><code>REDUCE</code><code>SCAN</code><code>SUMPRODUCT</code><code>SUMX2MY2</code><code>SUMX2PY2</code><code>SUMXMY2</code><code>TOCOL</code><code>TOROW</code><code>TRANSPOSE</code><code>TREND</code><code>VSTACK</code><code>WRAPCOLS</code><code>WRAPROWS</code></div>
+    </details>
+    <details>
+      <summary>Date<span class="n">26</span></summary>
+      <div class="fns"><code>DATE</code><code>DATEDIF</code><code>DATEVALUE</code><code>DAY</code><code>DAYS</code><code>DAYS360</code><code>EDATE</code><code>EOMONTH</code><code>EPOCHTODATE</code><code>HOUR</code><code>ISOWEEKNUM</code><code>MINUTE</code><code>MONTH</code><code>NETWORKDAYS</code><code>NETWORKDAYS.INTL</code><code>NOW</code><code>SECOND</code><code>TIME</code><code>TIMEVALUE</code><code>TODAY</code><code>WEEKDAY</code><code>WEEKNUM</code><code>WORKDAY</code><code>WORKDAY.INTL</code><code>YEAR</code><code>YEARFRAC</code></div>
+    </details>
+    <details>
+      <summary>Info<span class="n">19</span></summary>
+      <div class="fns"><code>CELL</code><code>ERROR.TYPE</code><code>ISBLANK</code><code>ISDATE</code><code>ISEMAIL</code><code>ISERR</code><code>ISERROR</code><code>ISFORMULA</code><code>ISLOGICAL</code><code>ISNA</code><code>ISNONTEXT</code><code>ISNUMBER</code><code>ISREF</code><code>ISTEXT</code><code>N</code><code>NA</code><code>SHEET</code><code>SHEETS</code><code>TYPE</code></div>
+    </details>
+    <details>
+      <summary>Lookup<span class="n">17</span></summary>
+      <div class="fns"><code>ADDRESS</code><code>CHOOSE</code><code>COLUMN</code><code>COLUMNS</code><code>FORMULATEXT</code><code>GETPIVOTDATA</code><code>HLOOKUP</code><code>INDEX</code><code>INDIRECT</code><code>LOOKUP</code><code>MATCH</code><code>OFFSET</code><code>ROW</code><code>ROWS</code><code>VLOOKUP</code><code>XLOOKUP</code><code>XMATCH</code></div>
+    </details>
+    <details>
+      <summary>Operator<span class="n">15</span></summary>
+      <div class="fns"><code>ADD</code><code>CONCAT</code><code>DIVIDE</code><code>EQ</code><code>GT</code><code>GTE</code><code>LT</code><code>LTE</code><code>MINUS</code><code>MULTIPLY</code><code>NE</code><code>POW</code><code>UMINUS</code><code>UNARY_PERCENT</code><code>UPLUS</code></div>
+    </details>
+    <details>
+      <summary>Logical<span class="n">14</span></summary>
+      <div class="fns"><code>AND</code><code>FALSE</code><code>IF</code><code>IFERROR</code><code>IFNA</code><code>IFS</code><code>ISBETWEEN</code><code>LAMBDA</code><code>LET</code><code>NOT</code><code>OR</code><code>SWITCH</code><code>TRUE</code><code>XOR</code></div>
+    </details>
+    <details>
+      <summary>Database<span class="n">12</span></summary>
+      <div class="fns"><code>DAVERAGE</code><code>DCOUNT</code><code>DCOUNTA</code><code>DGET</code><code>DMAX</code><code>DMIN</code><code>DPRODUCT</code><code>DSTDEV</code><code>DSTDEVP</code><code>DSUM</code><code>DVAR</code><code>DVARP</code></div>
+    </details>
+    <details>
+      <summary>Web<span class="n">8</span></summary>
+      <div class="fns"><code>ENCODEURL</code><code>HYPERLINK</code><code>IMPORTDATA</code><code>IMPORTFEED</code><code>IMPORTHTML</code><code>IMPORTRANGE</code><code>IMPORTXML</code><code>ISURL</code></div>
+    </details>
+    <details>
+      <summary>Google<span class="n">7</span></summary>
+      <div class="fns"><code>AI</code><code>DETECTLANGUAGE</code><code>GOOGLEFINANCE</code><code>GOOGLETRANSLATE</code><code>IMAGE</code><code>QUERY</code><code>SPARKLINE</code></div>
+    </details>
+    <details>
+      <summary>Parser<span class="n">6</span></summary>
+      <div class="fns"><code>CONVERT</code><code>TO_DATE</code><code>TO_DOLLARS</code><code>TO_PERCENT</code><code>TO_PURE_NUMBER</code><code>TO_TEXT</code></div>
+    </details>
+    <details>
+      <summary>Filter<span class="n">4</span></summary>
+      <div class="fns"><code>FILTER</code><code>SORT</code><code>SORTN</code><code>UNIQUE</code></div>
+    </details>
+  </div>
+</section>
+
+<section id="cells" class="wrap">
+  <h2>What one cell can hold</h2>
+  <p class="sec-lede">Text mode is not decoration. These are four things a single cell can carry once you can format inside it — each one saving a column, a row, or a workaround.</p>
+  <div class="cells reveal">
+    <div class="cellbox">
+      <div class="cellbox-h"><b>B7</b>Order status</div>
+      <div class="cellbox-b">&#9989; <b>Shipped</b> &middot; &#128666; left the warehouse 12 Sep</div>
+      <p class="cellbox-n">One cell carries the state and the note together, so no extra column is needed for a coloured dot.</p>
+    </div>
+    <div class="cellbox">
+      <div class="cellbox-h"><b>D12</b>Handover procedure</div>
+      <div class="cellbox-b"><ol><li>Export the monthly report</li><li>Reconcile the totals against the ledger</li><li>Send to the client and copy the account manager</li></ol></div>
+      <p class="cellbox-n">A real numbered list inside one cell — the numbers come from the list, not typed in by hand, so inserting a step renumbers the rest.</p>
+    </div>
+    <div class="cellbox">
+      <div class="cellbox-h"><b>A3</b>Definition with a source</div>
+      <div class="cellbox-b"><b>Net 30</b> &mdash; payment falls due thirty days after the invoice date. See the <a href="#cells">payment policy</a>.</div>
+      <p class="cellbox-n">Bold on one fragment, a link on another, and the rest plain — all within one cell.</p>
+    </div>
+    <div class="cellbox">
+      <div class="cellbox-h"><b>C5</b>Product line with two links</div>
+      <div class="cellbox-b">Steelcase Leap v2 &mdash; <a href="#cells">spec sheet</a> &middot; <a href="#cells">warranty terms</a></div>
+      <p class="cellbox-n">Google Sheets attaches one link per cell on its own. Cell Editor attaches one per fragment.</p>
+    </div>
+  </div>
+</section>
+
+<section id="checks" class="wrap">
+  <h2>Nine checks, two levels</h2>
+  <p class="sec-lede">Seven are errors and block the save. Two are warnings — they flag the formula and let you through.</p>
+  <div class="checks reveal">
+    <ul class="list">
+      <li><span class="tag e">error</span>Unclosed quote in a text string</li>
+      <li><span class="tag e">error</span>Unclosed quote in a sheet name</li>
+      <li><span class="tag e">error</span>Extra closing bracket</li>
+      <li><span class="tag e">error</span>Unclosed bracket</li>
+      <li><span class="tag e">error</span>Too few arguments for the function</li>
+      <li><span class="tag e">error</span>Too many arguments for the function</li>
+      <li><span class="tag e">error</span>Unexpected character</li>
+      <li><span class="tag w">warning</span>Unknown function name — likely a typo</li>
+      <li><span class="tag w">warning</span>Nesting too deep — split it across helper cells</li>
+    </ul>
+    <div class="panel">
+      <div class="code-wrap">
+        <div class="ln" aria-hidden="true">1</div>
+<pre class="code"><span class="fn">=SUMIF</span>(<span class="ref">A2:A40</span>, <span class="err-tok err-line">"paid</span>, <span class="ref2">B2:B40</span>)</pre>
+      </div>
+      <div class="panel-msg">Unclosed quote in a text string. Saving is blocked until it is fixed.</div>
+    </div>
+  </div>
+</section>
+
+<section id="text" class="wrap">
+  <h2>Cells hold more than numbers</h2>
+  <p class="sec-lede">Switch to text mode for notes, descriptions and anything that needs formatting inside a single cell.</p>
+  <div class="split wide reveal">
+    <figure class="shot" data-full="/assets/screenshots/rich-text.webp">
+      <div class="shot-frame" style="aspect-ratio:1600/845">
+        <img src="/assets/screenshots/rich-text.webp" width="1600" height="845" loading="lazy" decoding="async" alt="Cell Editor in text mode showing bold italic and colored text, numbered and bulleted lists, and a hyperlink being added">
+      </div>
+      <figcaption>Text mode: styles, lists and several links inside one cell</figcaption>
+    </figure>
+    <div>
+      <h3>Formatting that survives the save</h3>
+      <p>Bold, italic, underline and strikethrough, text color on individual fragments, and a point size that sets the real size of the characters in the cell. Lists come out as lists.</p>
+      <ul class="mini">
+        <li>Several hyperlinks attached to different fragments of one cell</li>
+        <li>Clear formatting resets a fragment back to plain text</li>
+        <li>Undo and redo inside the editor</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="privacy-note" class="wrap" style="padding-top:0">
+  <p class="note good"><b>Your spreadsheet stays yours.</b> Cell Editor asks for exactly two permissions: to draw its window inside Google Sheets, and to work with the one spreadsheet you currently have open. It has no permission to reach the internet, so it cannot send your data anywhere even in principle. The <a href="/cell-editor/privacy/">privacy policy</a> spells this out.</p>
+</section>
+
+<!-- ==========================================================
+     VIDEO SECTION — switched off until the walkthrough is recorded.
+     To bring it back: delete this comment opener and the closer
+     below, then drop the YouTube embed into the .video block.
+     The "Watch the walkthrough" button in the hero points at
+     #screenshots while this is off — change it back to #video.
+     ========================================================== -->
+<!--
+<section id="video" class="wrap">
+  <h2>Three minutes, start to finish</h2>
+  <p class="sec-lede">Both modes, picking ranges with the mouse, and the function browser.</p>
+  <div class="video reveal">
+    <div><div class="play" aria-hidden="true">&#9654;</div><p>Video walkthrough — publishing shortly</p></div>
+  </div>
+</section>
+
+-->
+
+<section id="screenshots" class="wrap">
+  <h2>See it in the sheet</h2>
+  <p class="sec-lede">Both surfaces, both modes. Click any image to enlarge.</p>
+  <div class="gal reveal">
+    <figure class="shot" data-full="/assets/screenshots/sidebar.webp">
+      <div class="shot-frame" style="aspect-ratio:911/922">
+        <img src="/assets/screenshots/sidebar.webp" width="911" height="922" loading="lazy" decoding="async" alt="Cell Editor docked as a narrow sidebar beside the spreadsheet">
+      </div>
+      <figcaption>Sidebar mode, always within reach of the sheet</figcaption>
+    </figure>
+    <figure class="shot" data-full="/assets/screenshots/emoji.webp">
+      <div class="shot-frame" style="aspect-ratio:1600/848">
+        <img src="/assets/screenshots/emoji.webp" width="1600" height="848" loading="lazy" decoding="async" alt="The emoji picker open inside Cell Editor with a search field and category grid">
+      </div>
+      <figcaption>Emoji picker with search, inside text mode</figcaption>
+    </figure>
+    <figure class="shot" data-full="/assets/screenshots/formula.webp">
+      <div class="shot-frame" style="aspect-ratio:1530/807">
+        <img src="/assets/screenshots/formula.webp" width="1530" height="807" loading="lazy" decoding="async" alt="Formula mode in a window over the sheet">
+      </div>
+      <figcaption>Formula mode in a resizable window</figcaption>
+    </figure>
+    <figure class="shot" data-full="/assets/screenshots/hints.webp">
+      <div class="shot-frame" style="aspect-ratio:932/812">
+        <img src="/assets/screenshots/hints.webp" width="932" height="812" loading="lazy" decoding="async" alt="A tooltip over the formula showing the QUERY signature with the data argument highlighted and a one-line description">
+      </div>
+      <figcaption>The signature of the function you are inside, with the current argument highlighted</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="languages" class="wrap">
+  <h2>Twenty-five languages, chosen for you</h2>
+  <p class="sec-lede">The interface, the help and the function descriptions follow your spreadsheet's locale — the same setting that decides whether your separator is a comma or a semicolon. Function descriptions are translated into twenty of the twenty-five; the rest show them in English.</p>
+  <div class="langs reveal"><span>English<i>English</i></span><span>Українська<i>Ukrainian</i></span><span>Deutsch<i>German</i></span><span>Français<i>French</i></span><span>Español<i>Spanish</i></span><span>Italiano<i>Italian</i></span><span>Nederlands<i>Dutch</i></span><span>Polski<i>Polish</i></span><span>Čeština<i>Czech</i></span><span>Slovenčina<i>Slovak</i></span><span>Magyar<i>Hungarian</i></span><span>Hrvatski<i>Croatian</i></span><span>Српски<i>Serbian</i></span><span>Български<i>Bulgarian</i></span><span>Dansk<i>Danish</i></span><span>Svenska<i>Swedish</i></span><span>Norsk<i>Norwegian</i></span><span>Suomi<i>Finnish</i></span><span>Íslenska<i>Icelandic</i></span><span>Português<i>Portuguese</i></span><span>Português do Brasil<i>Brazilian Portuguese</i></span><span>Русский<i>Russian</i></span><span>Euskara<i>Basque</i></span><span>ქართული<i>Georgian</i></span><span>Հայերեն<i>Armenian</i></span></div>
+</section>
+
+<section id="shortcuts" class="wrap">
+  <h2>Keyboard</h2>
+  <p class="sec-lede">On macOS, Cmd replaces Ctrl.</p>
+  <div class="kbd reveal">
+    <div><span>Move to the next cell</span><kbd>Alt + &larr; &rarr; &uarr; &darr;</kbd></div>
+    <div><span>Save and stay in the editor</span><kbd>Ctrl + Enter</kbd></div>
+    <div><span>Undo</span><kbd>Ctrl + Z</kbd></div>
+    <div><span>Redo</span><kbd>Ctrl + Y</kbd></div>
+    <div><span>Browse functions by category</span><kbd>Ctrl + Space</kbd></div>
+  </div>
+  <p class="note" style="margin-top:34px"><b>One thing to know about Firefox.</b> There the separate window opens as a modal, so it cannot be dragged and the sheet is unreachable while it is open — which means picking ranges with the mouse does not work. Use the sidebar, or another browser, for range work.</p>
+</section>
+</main>
+
+<div class="close" id="install">
+  <div class="wrap">
+    <h2>Add it to your spreadsheet</h2>
+    <p>Installs from the Google Workspace Marketplace and appears under the Extensions menu. Free, with no account to create.</p>
+    <span class="btn-pending">Install (Coming Soon)</span>
+  </div>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Screenshot gallery">
+  <div class="lb-bar">
+    <span class="lb-count" id="lb-count">1 / 5</span>
+    <span class="sp">
+      <button type="button" id="lb-prev" aria-label="Previous screenshot">&#8592;</button>
+      <button type="button" id="lb-next" aria-label="Next screenshot">&#8594;</button>
+      <button type="button" id="lb-zoom">Zoom in</button>
+      <button type="button" id="lbx">Close</button>
+    </span>
+  </div>
+  <div class="lb-stage" id="lb-stage"><img id="lbi" alt=""></div>
+  <p class="lb-cap" id="lb-cap"></p>
+</div>
+<footer class="wrap">
+  <div class="foot">
+    <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
+    <a href="/cell-editor/privacy/">Privacy policy</a>
+    <a href="/terms/">Terms of use</a>
+    <a href="/support/">Support</a>
+    <span class="sp">handyaddons.com</span>
+  </div>
+</footer>
+<button type="button" class="totop" id="totop" aria-label="Back to top">&#8593;</button>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

@@ -40,6 +40,7 @@ MARKETPLACE_URL = ""
 # Pixel sizes of the screenshots, so the build needs no image library.
 # Regenerate with:  python3 -c "from PIL import Image;..."  if you replace a file.
 SHOT_SIZES = {
+    "editor.webp": (1381, 1139),
     "emoji.webp": (1600, 848),
     "formula.webp": (1530, 807),
     "hints.webp": (932, 812),
@@ -88,6 +89,23 @@ ADDONS = [
 ]
 
 
+def faq_html():
+    return "\n".join(
+        f'    <details>\n      <summary>{q}</summary>\n      <div class="ans"><p>{a}</p></div>\n    </details>'
+        for q, a in FAQ)
+
+
+def faq_schema():
+    """FAQPage markup, so Google can show these questions in the results."""
+    import json
+    items = [{"@type": "Question", "name": q,
+              "acceptedAnswer": {"@type": "Answer",
+                                 "text": __import__("re").sub(r"<[^>]+>", "", a)}}
+             for q, a in FAQ]
+    data = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": items}
+    return '<script type="application/ld+json">\n' + json.dumps(data, indent=1) + "\n</script>\n"
+
+
 def categories_html():
     out = []
     for name, blurb, fns in CATEGORIES:
@@ -105,7 +123,7 @@ def cell_examples():
     rows = [
         ("B7", "Order status",
          '&#9989; <b>Shipped</b> &middot; &#128666; left the warehouse 12 Sep',
-         "One cell carries the state and the note together, so no extra column is needed for a coloured dot."),
+         "One cell carries the state and the note together, so no extra column is needed for a colored dot."),
         ("D12", "Handover procedure",
          '<ol><li>Export the monthly report</li><li>Reconcile the totals against the ledger</li>'
          '<li>Send to the client and copy the account manager</li></ol>',
@@ -191,17 +209,32 @@ def header(nav_links=True):
       <a href="/cell-editor/#checks">Checks</a>
       <a href="/cell-editor/#cells">Cells</a>
       <a href="/cell-editor/#screenshots">Screenshots</a>
+      <a href="/cell-editor/#faq">FAQ</a>
+      <a href="/cell-editor/#languages">Languages</a>
 """
     else:
         links = '      <a href="/cell-editor/">Cell Editor</a>\n'
     return f"""<header class="nav">
   <div class="wrap">
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="sitemenu" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
     <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
-    <nav aria-label="Sections">
+    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install"><span class="long">Install (Coming Soon)</span><span class="short">Install</span></a>
+    <!-- Below the breakpoint this is a slide-out panel; above it, an ordinary
+         row of links. It has to sit inside the header for the wide layout to
+         work, which is why the header carries no backdrop-filter: that property
+         would make the header the containing block for the fixed panel and pin
+         it to the header's own height. -->
+    <nav id="sitemenu" class="sitemenu" aria-label="Sections">
+      <div class="sitemenu-top">
+        <span>Sections</span>
+        <button type="button" id="menu-close" aria-label="Close menu">&#10005;</button>
+      </div>
 {links}    </nav>
-    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install">Install (Coming Soon)</a>
   </div>
 </header>
+<div class="menu-veil" id="menu-veil" hidden></div>
 """
 
 
@@ -247,6 +280,29 @@ LANGS = [
     ("Euskara", "Basque"), ("ქართული", "Georgian"), ("Հայերեն", "Armenian"),
 ]
 
+FAQ = [
+    ('Is Cell Editor really free?',
+     'Yes, and it stays free. There is no trial, no paid tier, no account to create and no card to enter. Install it from the Google Workspace Marketplace and use it on as many spreadsheets as you like.'),
+    ('Can the add-on see my other spreadsheets?',
+     'No. It asks for one permission over your documents, <code>spreadsheets.currentonly</code>, which covers only the file you have open at that moment. Your Drive, your other sheets, your email and your calendar are all outside what it can reach.'),
+    ('Is my data sent anywhere?',
+     "It cannot be. The add-on does not request <code>script.external_request</code>, the permission an Apps Script add-on needs before it can contact any server. Without it, Google itself blocks every outbound request. Your cell content is read and written inside your own browser and Google's runtime, and nowhere else."),
+    ('Does it work in Excel or LibreOffice?',
+     'No. Cell Editor is built on Google Apps Script and runs only inside Google Sheets, in a desktop browser.'),
+    ('Does it work in Firefox?',
+     'The sidebar does, fully. The separate window opens in Firefox as a modal dialog, so it cannot be dragged and the sheet behind it cannot be clicked — which means picking ranges with the mouse is unavailable there. Chrome, Edge and Safari have no such restriction.'),
+    ('Can I put two different links in one cell?',
+     'Yes, and that is one thing Google Sheets will not do on its own. Select a fragment of text, attach a link to it, then select another fragment and attach a different one. Both survive the save.'),
+    ('Will it change how my formula is stored?',
+     'No. Line breaks and indentation you add in the editor are part of the formula text, exactly as they would be if you typed them in the formula bar. Google Sheets ignores them when calculating, so the result is identical — the formula is simply readable afterwards.'),
+    ('What happens to my text if it is too long?',
+     'A Google Sheets cell holds at most 50 000 characters. A counter appears as you approach that limit and turns red past it, and the editor refuses to save rather than cutting your text off silently.'),
+    ('Which languages does the interface use?',
+     "Twenty-five, chosen automatically from your spreadsheet's locale — the same setting that decides whether your argument separator is a comma or a semicolon. Function descriptions are translated into twenty of them; the rest show the descriptions in English."),
+    ('How do I remove it?',
+     'Extensions menu, then Add-ons, then Manage add-ons, and remove Cell Editor. Your saved preferences go with it, and nothing of yours is left behind anywhere else, because nothing was ever stored outside your Google account.'),
+]
+
 CATEGORIES = [
     ('Statistical', 'Averages, distributions, regressions, counts with conditions.', 'AVEDEV AVERAGE AVERAGE.WEIGHTED AVERAGEA AVERAGEIF AVERAGEIFS BETA.DIST BETA.INV BETADIST BETAINV BINOM.DIST BINOM.INV BINOMDIST CHIDIST CHIINV CHISQ.DIST CHISQ.DIST.RT CHISQ.INV CHISQ.INV.RT CHISQ.TEST CHITEST CONFIDENCE CONFIDENCE.NORM CONFIDENCE.T CORREL COUNT COUNTA COVAR COVARIANCE.P COVARIANCE.S CRITBINOM DEVSQ EXPON.DIST EXPONDIST F.DIST F.DIST.RT F.INV F.INV.RT F.TEST FDIST FINV FISHER FISHERINV FORECAST FORECAST.LINEAR FTEST GAMMA GAMMA.DIST GAMMA.INV GAMMADIST GAMMAINV GAUSS GEOMEAN HARMEAN HYPGEOM.DIST HYPGEOMDIST INTERCEPT KURT LARGE LOGINV LOGNORM.DIST LOGNORM.INV LOGNORMDIST MARGINOFERROR MAX MAXA MAXIFS MEDIAN MIN MINA MINIFS MODE MODE.MULT MODE.SNGL NEGBINOM.DIST NEGBINOMDIST NORM.DIST NORM.INV NORM.S.DIST NORM.S.INV NORMDIST NORMINV NORMSDIST NORMSINV PEARSON PERCENTILE PERCENTILE.EXC PERCENTILE.INC PERCENTRANK PERCENTRANK.EXC PERCENTRANK.INC PERMUT PERMUTATIONA PHI POISSON POISSON.DIST PROB QUARTILE QUARTILE.EXC QUARTILE.INC RANK RANK.AVG RANK.EQ RSQ SKEW SKEW.P SLOPE SMALL STANDARDIZE STDEV STDEV.P STDEV.S STDEVA STDEVP STDEVPA STEYX T.DIST T.DIST.2T T.DIST.RT T.INV T.INV.2T T.TEST TDIST TINV TRIMMEAN TTEST VAR VAR.P VAR.S VARA VARP VARPA WEIBULL WEIBULL.DIST Z.TEST ZTEST'),
     ('Math', 'Arithmetic, trigonometry, rounding, matrices, random numbers.', 'ABS ACOS ACOSH ACOT ACOTH ASIN ASINH ATAN ATAN2 ATANH BASE CEILING CEILING.MATH CEILING.PRECISE COMBIN COMBINA COS COSH COT COTH COUNTBLANK COUNTIF COUNTIFS COUNTUNIQUE CSC CSCH DECIMAL DEGREES ERFC.PRECISE EVEN EXP FACT FACTDOUBLE FLOOR FLOOR.MATH FLOOR.PRECISE GAMMALN GAMMALN.PRECISE GCD IMLN IMPOWER IMSQRT INT ISEVEN ISO.CEILING ISODD LCM LN LOG LOG10 MOD MROUND MULTINOMIAL MUNIT ODD PI POWER PRODUCT QUOTIENT RADIANS RAND RANDARRAY RANDBETWEEN ROUND ROUNDDOWN ROUNDUP SEC SECH SEQUENCE SERIESSUM SIGN SIN SINH SQRT SQRTPI SUBTOTAL SUM SUMIF SUMIFS SUMSQ TAN TANH TRUNC'),
@@ -263,7 +319,7 @@ CATEGORIES = [
     ('Web', 'Importing from the web, URLs, hyperlinks, feeds.', 'ENCODEURL HYPERLINK IMPORTDATA IMPORTFEED IMPORTHTML IMPORTRANGE IMPORTXML ISURL'),
     ('Google', 'QUERY, GOOGLETRANSLATE, GOOGLEFINANCE, SPARKLINE and the AI function.', 'AI DETECTLANGUAGE GOOGLEFINANCE GOOGLETRANSLATE IMAGE QUERY SPARKLINE'),
     ('Parser', 'Conversion between units, dates, numbers and text.', 'CONVERT TO_DATE TO_DOLLARS TO_PERCENT TO_PURE_NUMBER TO_TEXT'),
-    ('Filter', 'Filtering, sorting and de-duplicating ranges.', 'FILTER SORT SORTN UNIQUE'),
+    ('Filter', 'Filtering, sorting and removing duplicates from ranges.', 'FILTER SORT SORTN UNIQUE'),
 ]
 
 FEATURES = [
@@ -322,6 +378,7 @@ def landing():
         for k, t in CHECKS)
     langs = "".join(f"<span>{native}<i>{eng}</i></span>" for native, eng in LANGS)
     cats = categories_html()
+    faqs = faq_html()
     cellboxes = cell_examples()
     keys = "\n".join(
         f'    <div><span>{n}</span><kbd>{k}</kbd></div>' for n, k in SHORTCUTS)
@@ -329,9 +386,9 @@ def landing():
     return head(
         "Cell Editor — a real editor for Google Sheets cells | handyaddons",
         "Cell Editor replaces the Google Sheets formula bar with a full editor: colored syntax, "
-        "live function hints, nine validation checks, 516 functions recognised, 25 languages. Free.",
+        "live function hints, nine validation checks, 516 functions recognized, 25 languages. Free.",
         "/cell-editor/",
-    ) + SCHEMA + header() + f"""<main id="main">
+    ) + SCHEMA + faq_schema() + header() + f"""<main id="main">
 
 <section class="hero" id="top">
   <div class="wrap hero-grid">
@@ -354,50 +411,14 @@ def landing():
       </div>
 
       <p class="after-cap">What Cell Editor gives you</p>
-      <div class="app unfold" id="hero-app">
-        <div class="app-head"><img src="/assets/brand/cell-editor-256.png" alt="" width="256" height="256"><b>Cell Editor</b><span class="x">&#10005;</span></div>
-        <div class="app-tools" aria-hidden="true">
-          <i class="dim">B</i><i class="dim">I</i><i class="dim">U</i><i class="dim">S</i><i class="dim">A</i><i class="dim">&#128279;</i>
-          <span class="app-sep"></span>
-          <i>&#8630;</i><i>&#8631;</i>
-          <span class="app-sep"></span>
-          <i class="wide">A&minus;</i><i class="wide">A+</i>
-          <span class="app-sep"></span>
-          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4"/><path d="M15 4v5h5"/><path d="M9 20v-5H4"/><path d="M15 20v-5h5"/></svg></i>
-          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg></i>
-        </div>
-        <div class="app-row">
-          <span class="pill">Result</span>
-          <span class="addr">A2</span>
-          <span class="arrows" aria-hidden="true"><span>&#9664;</span><span>&#9650;</span><span>&#9660;</span><span>&#9654;</span></span>
-          <span class="toggle">TEXT <span class="sw"></span><span class="on">FORMULA</span></span>
-        </div>
-        <div class="code-wrap">
-          <div class="ln" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10</div>
-<pre class="code"><span class="cl" style="--i:0"><span class="fn">=SORT</span>(</span>
-<span class="cl" style="--i:1">  <span class="fn">QUERY</span>(</span>
-<span class="cl" style="--i:2">    {{</span>
-<span class="cl" style="--i:3">      <span class="ref">Sale1!A2:C100</span>;</span>
-<span class="cl" style="--i:4">      <span class="ref2">Sale2!A2:C100</span></span>
-<span class="cl" style="--i:5">    }},</span>
-<span class="cl" style="--i:6">    <span class="str">"select Col1, Col2, Col3</span></span>
-<span class="cl" style="--i:7">     <span class="str">where Col1 is not null"</span>,</span>
-<span class="cl" style="--i:8">    <span class="num">0</span></span>
-<span class="cl" style="--i:9">  ), <span class="num">1</span>, <span class="str">TRUE</span>)</span></pre>
-        </div>
-        <div class="sig" aria-hidden="true"><span class="tfn">QUERY</span>(<span class="arg on">data</span>, <span class="arg">query</span>, <span class="arg">[headers]</span>)<span class="desc">Runs a SQL-like query over a range.</span></div>
-        <div class="result">Result: <b>Apple</b></div>
-        <div class="app-foot"><span>&#8594; Dock to sidebar</span><span>&#10003; Apply</span><span>&#128190; Save</span><span>&#10005; Close</span></div>
-        <div class="app-note">Argument separator <code>,</code> &middot; decimal <code>.</code> &middot; <code>Ctrl+Space</code> to pick a function</div>
-        <span class="grip" aria-hidden="true"></span>
-      </div>
+      {figure("editor.webp", "The Cell Editor window open over a Google Sheet, with a nested SORT and QUERY formula broken across fifteen numbered lines in colored syntax", "Formula mode: the same formula, on fifteen lines, colored by token", "shot hero-shot")}
     </div>
   </div>
 </section>
 
 <div class="strip">
   <div class="wrap">
-    <div class="stat"><b data-count="516">516</b><span>functions recognised</span></div>
+    <div class="stat"><b data-count="516">516</b><span>functions recognized</span></div>
     <div class="stat"><b data-count="16">16</b><span>categories of functions</span></div>
     <div class="stat"><b data-count="9">9</b><span>validation checks</span></div>
     <div class="stat"><b data-count="25">25</b><span>interface languages</span></div>
@@ -436,7 +457,7 @@ def landing():
 <section class="wrap" style="padding-top:0">
   <div class="split wide reveal">
     <div>
-      <h3>Five hundred and sixteen functions, recognised by name</h3>
+      <h3>Five hundred and sixteen functions, recognized by name</h3>
       <p>Press Ctrl + Space to browse by category or start typing to match. Where a function has a described signature — 450 of them do — the hint shows it and links to Google's own reference page, opened in your language.</p>
       <ul class="mini">
         <li>Argument names stay in English, matching Google's documentation</li>
@@ -537,6 +558,14 @@ def landing():
   <div class="langs reveal">{langs}</div>
 </section>
 
+<section id="faq" class="wrap">
+  <h2>Questions people ask first</h2>
+  <p class="sec-lede">Short answers. Anything not here, write to support and it gets answered the same way.</p>
+  <div class="cats faq reveal">
+{faqs}
+  </div>
+</section>
+
 <section id="shortcuts" class="wrap">
   <h2>Keyboard</h2>
   <p class="sec-lede">On macOS, Cmd replaces Ctrl.</p>
@@ -563,7 +592,9 @@ def privacy_page(a):
     only the scope table, the remembered preferences and the name come from
     the registry."""
     rows = "\n".join(
-        f"  <tr><td><code>{code}</code></td><td>{allows}</td><td>{why}</td></tr>"
+        f'  <tr><td data-label="Permission"><code>{code}</code></td>'
+        f'<td data-label="What it allows">{allows}</td>'
+        f'<td data-label="Why it is needed">{why}</td></tr>' 
         for code, allows, why in a["scopes"])
     n = len(a["scopes"])
     count = {1: "one permission", 2: "exactly two permissions"}.get(n, f"{n} permissions")
@@ -652,7 +683,7 @@ def terms_page():
 
     return head(
         "Terms of use | handyaddons",
-        "Terms of use for the handyaddons add-ons: the licence granted, the warranty "
+        "Terms of use for the handyaddons add-ons: the license granted, the warranty "
         "position, limitation of liability and the known limitations of each add-on.",
         "/terms/",
     ) + header(False) + f"""<main id="main" class="doc">
@@ -666,10 +697,10 @@ def terms_page():
 <p>Each add-on is a tool that runs inside a Google application and does the job described on its page on this site. They are provided free of charge, for personal and commercial use alike, with no account to create and no subscription.</p>
 <p>We may change, add or remove features at any time. If a feature you depend on is going away, we will try to say so on this site first, but we cannot promise notice in every case.</p>
 
-<h2>2. Your licence</h2>
+<h2>2. Your license</h2>
 <p>The add-ons themselves — their code, their interfaces and their texts — remain the property of the publisher. Nothing here transfers ownership of them to you.</p>
-<p>What you receive is a licence to use them: personal or commercial, worldwide, free of charge, non-exclusive and non-transferable, on as many documents and in as many accounts as you like, for as long as these terms are in force. The licence is revocable, but in practice the only thing that would end it is your breaking the rules in the next section.</p>
-<p>Note that this is a real commercial licence, not a "personal, non-commercial viewing" permission of the kind that boilerplate website terms often grant by accident. Using a handyaddons add-on at work, inside a company, is exactly what it is for.</p>
+<p>What you receive is a license to use them: personal or commercial, worldwide, free of charge, non-exclusive and non-transferable, on as many documents and in as many accounts as you like, for as long as these terms are in force. The license is revocable, but in practice the only thing that would end it is your breaking the rules in the next section.</p>
+<p>Note that this is a real commercial license, not a "personal, non-commercial viewing" permission of the kind that boilerplate website terms often grant by accident. Using a handyaddons add-on at work, inside a company, is exactly what it is for.</p>
 
 <h2>3. What you may not do</h2>
 <p>You may not resell an add-on, redistribute it as your own, decompile or reverse engineer it, strip out its authorship notices, or use it to do anything unlawful or to interfere with Google's services.</p>
@@ -755,7 +786,7 @@ def support_page():
 <p>Your preferences go with the add-on. Nothing of yours is left behind anywhere, because nothing of yours was ever held outside your own Google account.</p>
 
 <h2>The documents</h2>
-<p>Each add-on's privacy policy explains what that add-on does and does not do with your data. The <a href="/terms/">terms of use</a> cover the licence, the warranty position and the known limitations, and apply to every add-on.</p>
+<p>Each add-on's privacy policy explains what that add-on does and does not do with your data. The <a href="/terms/">terms of use</a> cover the license, the warranty position and the known limitations, and apply to every add-on.</p>
 </main>
 """ + FOOTER
 

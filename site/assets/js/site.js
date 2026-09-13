@@ -136,7 +136,7 @@
 
 /* ---------- active section in the header ---------- */
 (function () {
-  var links = [].slice.call(document.querySelectorAll('.nav nav a[href*="#"]'));
+  var links = [].slice.call(document.querySelectorAll('.sitemenu a[href*="#"]'));
   if (!links.length || !('IntersectionObserver' in window)) return;
 
   var map = {};
@@ -219,4 +219,50 @@
     });
   }, { threshold: 0.5 });
   nums.forEach(function (n) { io.observe(n); });
+})();
+
+
+/* ---------- the slide-out menu ---------- */
+(function () {
+  var btn = document.getElementById('menu-btn');
+  var panel = document.getElementById('sitemenu');
+  var veil = document.getElementById('menu-veil');
+  if (!btn || !panel || !veil) return;
+
+  function open() {
+    panel.classList.add('open');
+    veil.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    btn.setAttribute('aria-label', 'Close menu');
+    document.body.classList.add('menu-open');
+    var first = panel.querySelector('a');
+    if (first) first.focus();
+  }
+  function close(returnFocus) {
+    panel.classList.remove('open');
+    veil.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Open menu');
+    document.body.classList.remove('menu-open');
+    if (returnFocus) btn.focus();
+  }
+  btn.addEventListener('click', function () {
+    panel.classList.contains('open') ? close(true) : open();
+  });
+  veil.addEventListener('click', function () { close(false); });
+  var x = document.getElementById('menu-close');
+  if (x) x.addEventListener('click', function () { close(true); });
+  /* following a link should close the panel, since the target is on this page */
+  panel.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') close(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && panel.classList.contains('open')) close(true);
+  });
+  /* if the window grows to desktop width the panel must not stay latched open */
+  var wide = window.matchMedia('(min-width: 1060px)');
+  (wide.addEventListener ? wide.addEventListener.bind(wide, 'change')
+                         : wide.addListener.bind(wide))(function () {
+    if (wide.matches) close(false);
+  });
 })();

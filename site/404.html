@@ -27,13 +27,26 @@
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="sitemenu" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
     <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
-    <nav aria-label="Sections">
+    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install"><span class="long">Install (Coming Soon)</span><span class="short">Install</span></a>
+    <!-- Below the breakpoint this is a slide-out panel; above it, an ordinary
+         row of links. It has to sit inside the header for the wide layout to
+         work, which is why the header carries no backdrop-filter: that property
+         would make the header the containing block for the fixed panel and pin
+         it to the header's own height. -->
+    <nav id="sitemenu" class="sitemenu" aria-label="Sections">
+      <div class="sitemenu-top">
+        <span>Sections</span>
+        <button type="button" id="menu-close" aria-label="Close menu">&#10005;</button>
+      </div>
       <a href="/cell-editor/">Cell Editor</a>
     </nav>
-    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install">Install (Coming Soon)</a>
   </div>
 </header>
+<div class="menu-veil" id="menu-veil" hidden></div>
 <main id="main" class="doc">
 <h1>That page is not here</h1>
 <p class="updated">Error 404</p>

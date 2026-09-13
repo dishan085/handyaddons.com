@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cell Editor — a real editor for Google Sheets cells | handyaddons</title>
-<meta name="description" content="Cell Editor replaces the Google Sheets formula bar with a full editor: colored syntax, live function hints, nine validation checks, 516 functions recognised, 25 languages. Free.">
+<meta name="description" content="Cell Editor replaces the Google Sheets formula bar with a full editor: colored syntax, live function hints, nine validation checks, 516 functions recognized, 25 languages. Free.">
 <link rel="canonical" href="https://handyaddons.com/cell-editor/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="handyaddons">
 <meta property="og:title" content="Cell Editor — a real editor for Google Sheets cells | handyaddons">
-<meta property="og:description" content="Cell Editor replaces the Google Sheets formula bar with a full editor: colored syntax, live function hints, nine validation checks, 516 functions recognised, 25 languages. Free.">
+<meta property="og:description" content="Cell Editor replaces the Google Sheets formula bar with a full editor: colored syntax, live function hints, nine validation checks, 516 functions recognized, 25 languages. Free.">
 <meta property="og:url" content="https://handyaddons.com/cell-editor/">
 <meta property="og:image" content="https://handyaddons.com/assets/brand/og-cell-editor.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -38,20 +38,123 @@
   "author": { "@type": "Organization", "name": "handyaddons", "url": "https://handyaddons.com/" }
 }
 </script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is Cell Editor really free?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes, and it stays free. There is no trial, no paid tier, no account to create and no card to enter. Install it from the Google Workspace Marketplace and use it on as many spreadsheets as you like."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can the add-on see my other spreadsheets?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. It asks for one permission over your documents, spreadsheets.currentonly, which covers only the file you have open at that moment. Your Drive, your other sheets, your email and your calendar are all outside what it can reach."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is my data sent anywhere?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "It cannot be. The add-on does not request script.external_request, the permission an Apps Script add-on needs before it can contact any server. Without it, Google itself blocks every outbound request. Your cell content is read and written inside your own browser and Google's runtime, and nowhere else."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Does it work in Excel or LibreOffice?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. Cell Editor is built on Google Apps Script and runs only inside Google Sheets, in a desktop browser."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Does it work in Firefox?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The sidebar does, fully. The separate window opens in Firefox as a modal dialog, so it cannot be dragged and the sheet behind it cannot be clicked \u2014 which means picking ranges with the mouse is unavailable there. Chrome, Edge and Safari have no such restriction."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I put two different links in one cell?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes, and that is one thing Google Sheets will not do on its own. Select a fragment of text, attach a link to it, then select another fragment and attach a different one. Both survive the save."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Will it change how my formula is stored?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. Line breaks and indentation you add in the editor are part of the formula text, exactly as they would be if you typed them in the formula bar. Google Sheets ignores them when calculating, so the result is identical \u2014 the formula is simply readable afterwards."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What happens to my text if it is too long?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A Google Sheets cell holds at most 50 000 characters. A counter appears as you approach that limit and turns red past it, and the editor refuses to save rather than cutting your text off silently."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Which languages does the interface use?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Twenty-five, chosen automatically from your spreadsheet's locale \u2014 the same setting that decides whether your argument separator is a comma or a semicolon. Function descriptions are translated into twenty of them; the rest show the descriptions in English."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do I remove it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Extensions menu, then Add-ons, then Manage add-ons, and remove Cell Editor. Your saved preferences go with it, and nothing of yours is left behind anywhere else, because nothing was ever stored outside your Google account."
+   }
+  }
+ ]
+}
+</script>
 <header class="nav">
   <div class="wrap">
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="sitemenu" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
     <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
-    <nav aria-label="Sections">
+    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install"><span class="long">Install (Coming Soon)</span><span class="short">Install</span></a>
+    <!-- Below the breakpoint this is a slide-out panel; above it, an ordinary
+         row of links. It has to sit inside the header for the wide layout to
+         work, which is why the header carries no backdrop-filter: that property
+         would make the header the containing block for the fixed panel and pin
+         it to the header's own height. -->
+    <nav id="sitemenu" class="sitemenu" aria-label="Sections">
+      <div class="sitemenu-top">
+        <span>Sections</span>
+        <button type="button" id="menu-close" aria-label="Close menu">&#10005;</button>
+      </div>
       <a href="/cell-editor/#features">Features</a>
       <a href="/cell-editor/#formulas">Formulas</a>
       <a href="/cell-editor/#functions">Functions</a>
       <a href="/cell-editor/#checks">Checks</a>
       <a href="/cell-editor/#cells">Cells</a>
       <a href="/cell-editor/#screenshots">Screenshots</a>
+      <a href="/cell-editor/#faq">FAQ</a>
+      <a href="/cell-editor/#languages">Languages</a>
     </nav>
-    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install">Install (Coming Soon)</a>
   </div>
 </header>
+<div class="menu-veil" id="menu-veil" hidden></div>
 <main id="main">
 
 <section class="hero" id="top">
@@ -75,50 +178,19 @@
       </div>
 
       <p class="after-cap">What Cell Editor gives you</p>
-      <div class="app unfold" id="hero-app">
-        <div class="app-head"><img src="/assets/brand/cell-editor-256.png" alt="" width="256" height="256"><b>Cell Editor</b><span class="x">&#10005;</span></div>
-        <div class="app-tools" aria-hidden="true">
-          <i class="dim">B</i><i class="dim">I</i><i class="dim">U</i><i class="dim">S</i><i class="dim">A</i><i class="dim">&#128279;</i>
-          <span class="app-sep"></span>
-          <i>&#8630;</i><i>&#8631;</i>
-          <span class="app-sep"></span>
-          <i class="wide">A&minus;</i><i class="wide">A+</i>
-          <span class="app-sep"></span>
-          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4"/><path d="M15 4v5h5"/><path d="M9 20v-5H4"/><path d="M15 20v-5h5"/></svg></i>
-          <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg></i>
-        </div>
-        <div class="app-row">
-          <span class="pill">Result</span>
-          <span class="addr">A2</span>
-          <span class="arrows" aria-hidden="true"><span>&#9664;</span><span>&#9650;</span><span>&#9660;</span><span>&#9654;</span></span>
-          <span class="toggle">TEXT <span class="sw"></span><span class="on">FORMULA</span></span>
-        </div>
-        <div class="code-wrap">
-          <div class="ln" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10</div>
-<pre class="code"><span class="cl" style="--i:0"><span class="fn">=SORT</span>(</span>
-<span class="cl" style="--i:1">  <span class="fn">QUERY</span>(</span>
-<span class="cl" style="--i:2">    {</span>
-<span class="cl" style="--i:3">      <span class="ref">Sale1!A2:C100</span>;</span>
-<span class="cl" style="--i:4">      <span class="ref2">Sale2!A2:C100</span></span>
-<span class="cl" style="--i:5">    },</span>
-<span class="cl" style="--i:6">    <span class="str">"select Col1, Col2, Col3</span></span>
-<span class="cl" style="--i:7">     <span class="str">where Col1 is not null"</span>,</span>
-<span class="cl" style="--i:8">    <span class="num">0</span></span>
-<span class="cl" style="--i:9">  ), <span class="num">1</span>, <span class="str">TRUE</span>)</span></pre>
-        </div>
-        <div class="sig" aria-hidden="true"><span class="tfn">QUERY</span>(<span class="arg on">data</span>, <span class="arg">query</span>, <span class="arg">[headers]</span>)<span class="desc">Runs a SQL-like query over a range.</span></div>
-        <div class="result">Result: <b>Apple</b></div>
-        <div class="app-foot"><span>&#8594; Dock to sidebar</span><span>&#10003; Apply</span><span>&#128190; Save</span><span>&#10005; Close</span></div>
-        <div class="app-note">Argument separator <code>,</code> &middot; decimal <code>.</code> &middot; <code>Ctrl+Space</code> to pick a function</div>
-        <span class="grip" aria-hidden="true"></span>
+      <figure class="shot hero-shot" data-full="/assets/screenshots/editor.webp">
+      <div class="shot-frame" style="aspect-ratio:1381/1139">
+        <img src="/assets/screenshots/editor.webp" width="1381" height="1139" loading="lazy" decoding="async" alt="The Cell Editor window open over a Google Sheet, with a nested SORT and QUERY formula broken across fifteen numbered lines in colored syntax">
       </div>
+      <figcaption>Formula mode: the same formula, on fifteen lines, colored by token</figcaption>
+    </figure>
     </div>
   </div>
 </section>
 
 <div class="strip">
   <div class="wrap">
-    <div class="stat"><b data-count="516">516</b><span>functions recognised</span></div>
+    <div class="stat"><b data-count="516">516</b><span>functions recognized</span></div>
     <div class="stat"><b data-count="16">16</b><span>categories of functions</span></div>
     <div class="stat"><b data-count="9">9</b><span>validation checks</span></div>
     <div class="stat"><b data-count="25">25</b><span>interface languages</span></div>
@@ -170,7 +242,7 @@
 <section class="wrap" style="padding-top:0">
   <div class="split wide reveal">
     <div>
-      <h3>Five hundred and sixteen functions, recognised by name</h3>
+      <h3>Five hundred and sixteen functions, recognized by name</h3>
       <p>Press Ctrl + Space to browse by category or start typing to match. Where a function has a described signature — 450 of them do — the hint shows it and links to Google's own reference page, opened in your language.</p>
       <ul class="mini">
         <li>Argument names stay in English, matching Google's documentation</li>
@@ -265,7 +337,7 @@
     <div class="cellbox">
       <div class="cellbox-h"><b>B7</b>Order status</div>
       <div class="cellbox-b">&#9989; <b>Shipped</b> &middot; &#128666; left the warehouse 12 Sep</div>
-      <p class="cellbox-n">One cell carries the state and the note together, so no extra column is needed for a coloured dot.</p>
+      <p class="cellbox-n">One cell carries the state and the note together, so no extra column is needed for a colored dot.</p>
     </div>
     <div class="cellbox">
       <div class="cellbox-h"><b>D12</b>Handover procedure</div>
@@ -389,6 +461,53 @@
   <h2>Twenty-five languages, chosen for you</h2>
   <p class="sec-lede">The interface, the help and the function descriptions follow your spreadsheet's locale — the same setting that decides whether your separator is a comma or a semicolon. Function descriptions are translated into twenty of the twenty-five; the rest show them in English.</p>
   <div class="langs reveal"><span>English<i>English</i></span><span>Українська<i>Ukrainian</i></span><span>Deutsch<i>German</i></span><span>Français<i>French</i></span><span>Español<i>Spanish</i></span><span>Italiano<i>Italian</i></span><span>Nederlands<i>Dutch</i></span><span>Polski<i>Polish</i></span><span>Čeština<i>Czech</i></span><span>Slovenčina<i>Slovak</i></span><span>Magyar<i>Hungarian</i></span><span>Hrvatski<i>Croatian</i></span><span>Српски<i>Serbian</i></span><span>Български<i>Bulgarian</i></span><span>Dansk<i>Danish</i></span><span>Svenska<i>Swedish</i></span><span>Norsk<i>Norwegian</i></span><span>Suomi<i>Finnish</i></span><span>Íslenska<i>Icelandic</i></span><span>Português<i>Portuguese</i></span><span>Português do Brasil<i>Brazilian Portuguese</i></span><span>Русский<i>Russian</i></span><span>Euskara<i>Basque</i></span><span>ქართული<i>Georgian</i></span><span>Հայերեն<i>Armenian</i></span></div>
+</section>
+
+<section id="faq" class="wrap">
+  <h2>Questions people ask first</h2>
+  <p class="sec-lede">Short answers. Anything not here, write to support and it gets answered the same way.</p>
+  <div class="cats faq reveal">
+    <details>
+      <summary>Is Cell Editor really free?</summary>
+      <div class="ans"><p>Yes, and it stays free. There is no trial, no paid tier, no account to create and no card to enter. Install it from the Google Workspace Marketplace and use it on as many spreadsheets as you like.</p></div>
+    </details>
+    <details>
+      <summary>Can the add-on see my other spreadsheets?</summary>
+      <div class="ans"><p>No. It asks for one permission over your documents, <code>spreadsheets.currentonly</code>, which covers only the file you have open at that moment. Your Drive, your other sheets, your email and your calendar are all outside what it can reach.</p></div>
+    </details>
+    <details>
+      <summary>Is my data sent anywhere?</summary>
+      <div class="ans"><p>It cannot be. The add-on does not request <code>script.external_request</code>, the permission an Apps Script add-on needs before it can contact any server. Without it, Google itself blocks every outbound request. Your cell content is read and written inside your own browser and Google's runtime, and nowhere else.</p></div>
+    </details>
+    <details>
+      <summary>Does it work in Excel or LibreOffice?</summary>
+      <div class="ans"><p>No. Cell Editor is built on Google Apps Script and runs only inside Google Sheets, in a desktop browser.</p></div>
+    </details>
+    <details>
+      <summary>Does it work in Firefox?</summary>
+      <div class="ans"><p>The sidebar does, fully. The separate window opens in Firefox as a modal dialog, so it cannot be dragged and the sheet behind it cannot be clicked — which means picking ranges with the mouse is unavailable there. Chrome, Edge and Safari have no such restriction.</p></div>
+    </details>
+    <details>
+      <summary>Can I put two different links in one cell?</summary>
+      <div class="ans"><p>Yes, and that is one thing Google Sheets will not do on its own. Select a fragment of text, attach a link to it, then select another fragment and attach a different one. Both survive the save.</p></div>
+    </details>
+    <details>
+      <summary>Will it change how my formula is stored?</summary>
+      <div class="ans"><p>No. Line breaks and indentation you add in the editor are part of the formula text, exactly as they would be if you typed them in the formula bar. Google Sheets ignores them when calculating, so the result is identical — the formula is simply readable afterwards.</p></div>
+    </details>
+    <details>
+      <summary>What happens to my text if it is too long?</summary>
+      <div class="ans"><p>A Google Sheets cell holds at most 50 000 characters. A counter appears as you approach that limit and turns red past it, and the editor refuses to save rather than cutting your text off silently.</p></div>
+    </details>
+    <details>
+      <summary>Which languages does the interface use?</summary>
+      <div class="ans"><p>Twenty-five, chosen automatically from your spreadsheet's locale — the same setting that decides whether your argument separator is a comma or a semicolon. Function descriptions are translated into twenty of them; the rest show the descriptions in English.</p></div>
+    </details>
+    <details>
+      <summary>How do I remove it?</summary>
+      <div class="ans"><p>Extensions menu, then Add-ons, then Manage add-ons, and remove Cell Editor. Your saved preferences go with it, and nothing of yours is left behind anywhere else, because nothing was ever stored outside your Google account.</p></div>
+    </details>
+  </div>
 </section>
 
 <section id="shortcuts" class="wrap">

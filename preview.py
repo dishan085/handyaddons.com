@@ -26,8 +26,11 @@ names = {"cell-editor/index.html": f"landing-{stamp}.html",
          "support/index.html": f"support-{stamp}.html"}
 for src, dst in names.items():
     h = (root / src).read_text()
-    h = h.replace('<link rel="stylesheet" href="/assets/css/site.css">', f"<style>{css}</style>")
-    h = h.replace('<script src="/assets/js/site.js" defer></script>', f"<script>{js}</script>")
+    # a lambda, so backslashes inside the stylesheet are not read as group references
+    h = re.sub(r'<link rel="stylesheet" href="/assets/css/site\.css[^"]*">',
+               lambda _m: f"<style>{css}</style>", h)
+    h = re.sub(r'<script src="/assets/js/site\.js[^"]*" defer></script>',
+               lambda _m: f"<script>{js}</script>", h)
     h = re.sub(r'(href|src|data-full)="(/assets/(?:brand|screenshots)/[\w.-]+\.(?:png|webp|svg))"',
                lambda m: f'{m.group(1)}="{data_uri(m.group(2))}"', h)
     h = h.replace('href="/cell-editor/privacy/"', f'href="{names["cell-editor/privacy/index.html"]}"')

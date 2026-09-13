@@ -149,6 +149,21 @@ def cell_examples():
     return "\n".join(out)
 
 
+def asset(path):
+    """Appends a short hash of the file's own contents to its address.
+
+    Browsers cache stylesheets and scripts by address. When only the contents
+    change, the address stays the same and a visitor keeps the old copy — which
+    looks exactly like "I published the update and nothing happened". With the
+    hash in the address, a changed file gets a new address and the browser is
+    obliged to fetch it; an unchanged file keeps its address and stays cached.
+    """
+    import hashlib
+    data = (OUT / path.lstrip("/")).read_bytes()
+    return f'{path}?v={hashlib.sha256(data).hexdigest()[:10]}'
+
+
+
 def figure(name, alt, caption, cls="shot"):
     """A screenshot in its own frame. The frame carries the picture's real
     aspect ratio, so the image can never be squashed and the page does not
@@ -193,7 +208,7 @@ def head(title, desc, canonical, og_image="/assets/brand/og-cell-editor.png"):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&amp;family=Roboto+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="{asset("/assets/css/site.css")}">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -248,7 +263,7 @@ FOOTER = f"""<footer class="wrap">
   </div>
 </footer>
 <button type="button" class="totop" id="totop" aria-label="Back to top">&#8593;</button>
-<script src="/assets/js/site.js" defer></script>
+<script src="{asset("/assets/js/site.js")}" defer></script>
 </body>
 </html>
 """

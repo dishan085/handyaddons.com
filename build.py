@@ -241,6 +241,11 @@ def header(nav_links=True):
          work, which is why the header carries no backdrop-filter: that property
          would make the header the containing block for the fixed panel and pin
          it to the header's own height. -->
+    <!-- The veil sits inside the header alongside the panel on purpose. The
+         header carries z-index:60 and therefore forms its own stacking context;
+         a veil placed outside it competes with the header as a whole, wins at
+         65 > 60 and covers the panel, which makes every menu item unclickable. -->
+    <div class="menu-veil" id="menu-veil" hidden></div>
     <nav id="sitemenu" class="sitemenu" aria-label="Sections">
       <div class="sitemenu-top">
         <span>Sections</span>
@@ -249,7 +254,6 @@ def header(nav_links=True):
 {links}    </nav>
   </div>
 </header>
-<div class="menu-veil" id="menu-veil" hidden></div>
 """
 
 

@@ -1,9 +1,14 @@
+# Rebuilds and publishes handyaddons.com after every change.
+#
+# What happens: GitHub takes the files, runs build.py to regenerate the HTML
+# pages from their texts, then publishes the site/ folder. Nothing is installed
+# beyond Python itself, which is already present on the runner.
 name: Build and deploy
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+  workflow_dispatch:        # also runnable by hand from the Actions tab
 
 permissions:
   contents: read
@@ -23,8 +28,44 @@ jobs:
       - name: Regenerate the pages
         run: python3 build.py
 
+      - name: Fail if a page came out broken
+        run: |
+          python3 - <<'PY'
+          import glob, pathlib, re, sys
+          root = pathlib.Path("site")
+          problems = []
+          pages = glob.glob("site/**/*.html", recursive=True)
+          if not pages:
+              problems.append("no pages were generated at all")
+          for f in pages:
+              t = pathlib.Path(f).read_text(encoding="utf-8")
+              if "<title>" not in t:
+                  problems.append(f"{f}: no <title>")
+              for m in re.finditer(r'(?:href|src)="(/[^":#?]*)[^"]*"', t):
+                  # group(1) stops at the "?", so the cache-busting ?v=... that
+                  # build.py appends to the stylesheet and the script is not
+                  # mistaken for part of the filename. It was, and every run of
+                  # this check failed on it, which stopped the deploy job from
+                  # ever running and left the live site frozen on an old build.
+                  path = m.group(1)
+                  target = root / path.lstrip("/")
+                  if path.endswith("/"):
+                      target = target / "index.html"
+                  if not target.exists():
+                      problems.append(f"{f}: broken link to {path}")
+          if not (root / "CNAME").exists():
+              problems.append("CNAME is missing — the custom domain would break")
+          if problems:
+              print("\n".join("  " + p for p in problems))
+              sys.exit(1)
+          print(f"{len(pages)} pages, no broken links, CNAME present")
+          PY
+
       - uses: actions/configure-pages@v5
-        
+        with:
+          # Turns Pages on by itself if it has not been switched on in
+          # Settings yet, so the very first run cannot fail on that alone.
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

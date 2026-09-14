@@ -134,16 +134,22 @@
   check();
 })();
 
-/* ---------- active section in the header ---------- */
+/* ---------- active section in the header ----------
+   Two lists now carry the same links: the drawer and the row shown on a wide
+   screen. Both are painted, so the marker is correct whichever one is on
+   screen when the window is resized. */
 (function () {
-  var links = [].slice.call(document.querySelectorAll('.sitemenu a[href*="#"]'));
+  var links = [].slice.call(
+    document.querySelectorAll('.sitemenu a[href*="#"], .deskmenu a[href*="#"]'));
   if (!links.length || !('IntersectionObserver' in window)) return;
 
   var map = {};
   links.forEach(function (a) {
     var id = a.getAttribute('href').split('#')[1];
     var sec = id && document.getElementById(id);
-    if (sec) map[id] = { link: a, section: sec };
+    if (!sec) return;
+    if (!map[id]) map[id] = { links: [], section: sec };
+    map[id].links.push(a);
   });
   var ids = Object.keys(map);
   if (!ids.length) return;
@@ -157,7 +163,9 @@
       var top = map[id].section.getBoundingClientRect().top;
       if (best === null || top < map[best].section.getBoundingClientRect().top) best = id;
     });
-    ids.forEach(function (id) { map[id].link.classList.toggle('here', id === best); });
+    ids.forEach(function (id) {
+      map[id].links.forEach(function (a) { a.classList.toggle('here', id === best); });
+    });
   }
 
   var io = new IntersectionObserver(function (entries) {
@@ -222,47 +230,97 @@
 })();
 
 
-/* ---------- the slide-out menu ---------- */
+/* ---------- the slide-out drawer ---------- */
 (function () {
+  /* Must match the breakpoint in site.css, in both places it appears there. */
+  var WIDE = 1320;
+
   var btn = document.getElementById('menu-btn');
   var panel = document.getElementById('sitemenu');
   var veil = document.getElementById('menu-veil');
   if (!btn || !panel || !veil) return;
 
+  /* Scroll lock. Safari on iOS ignores overflow:hidden on <body>, so the body
+     is pinned at its current offset instead and the offset put back on close.
+     scroll-behavior is switched off for that one restoring jump, or the page
+     would glide back up through the whole document. */
+  var lockedAt = 0;
+  function lockScroll() {
+    lockedAt = window.pageYOffset || document.documentElement.scrollTop || 0;
+    document.body.style.top = (-lockedAt) + 'px';
+    document.body.classList.add('menu-open');
+  }
+  function unlockScroll() {
+    if (!document.body.classList.contains('menu-open')) return;
+    var root = document.documentElement;
+    var prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    document.body.classList.remove('menu-open');
+    document.body.style.top = '';
+    window.scrollTo(0, lockedAt);
+    root.style.scrollBehavior = prev;
+  }
+
   function open() {
     panel.classList.add('open');
-    veil.hidden = false;
+    panel.removeAttribute('aria-hidden');
+    veil.classList.add('on');
+    veil.removeAttribute('hidden');
     btn.setAttribute('aria-expanded', 'true');
     btn.setAttribute('aria-label', 'Close menu');
-    document.body.classList.add('menu-open');
+    lockScroll();
     var first = panel.querySelector('a');
     if (first) first.focus();
   }
   function close(returnFocus) {
     panel.classList.remove('open');
-    veil.hidden = true;
+    panel.setAttribute('aria-hidden', 'true');
+    veil.classList.remove('on');
     btn.setAttribute('aria-expanded', 'false');
     btn.setAttribute('aria-label', 'Open menu');
-    document.body.classList.remove('menu-open');
+    unlockScroll();
     if (returnFocus) btn.focus();
   }
+
+  /* The markup ships with the drawer hidden, so the state the attributes
+     describe is true before a single tap. */
+  panel.setAttribute('aria-hidden', 'true');
+  veil.removeAttribute('hidden');
+
   btn.addEventListener('click', function () {
     panel.classList.contains('open') ? close(true) : open();
   });
   veil.addEventListener('click', function () { close(false); });
   var x = document.getElementById('menu-close');
   if (x) x.addEventListener('click', function () { close(true); });
-  /* following a link should close the panel, since the target is on this page */
+
+  /* Following a link closes the drawer. The scroll position is released first,
+     inside this handler, so that the jump to the anchor lands where it should
+     rather than fighting a body that is still pinned. */
   panel.addEventListener('click', function (e) {
-    if (e.target.tagName === 'A') close(false);
+    var a = e.target.closest ? e.target.closest('a') : null;
+    if (a && panel.contains(a)) close(false);
   });
+
+  /* Tab must not walk out of an open drawer into the page behind it. */
+  panel.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab' || !panel.classList.contains('open')) return;
+    var f = [].slice.call(panel.querySelectorAll('a[href],button:not([disabled])'));
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && panel.classList.contains('open')) close(true);
   });
-  /* if the window grows to desktop width the panel must not stay latched open */
-  var wide = window.matchMedia('(min-width: 1060px)');
-  (wide.addEventListener ? wide.addEventListener.bind(wide, 'change')
-                         : wide.addListener.bind(wide))(function () {
-    if (wide.matches) close(false);
-  });
+
+  /* If the window grows past the breakpoint the drawer is hidden by CSS, so
+     the lock and the attributes must be released with it — otherwise the page
+     stays pinned with no visible way to unpin it. */
+  var wide = window.matchMedia('(min-width: ' + WIDE + 'px)');
+  function onWide() { if (wide.matches) close(false); }
+  if (wide.addEventListener) wide.addEventListener('change', onWide);
+  else wide.addListener(onWide);
 })();

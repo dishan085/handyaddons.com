@@ -15,6 +15,20 @@ UPDATED = "11 September 2026"
 MARKETPLACE_URL = ""
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# WHAT SITS AT THE ROOT OF THE SITE
+#
+#   "auto"       a catalogue once there is more than one add-on in ADDONS,
+#                a redirect to the single add-on's page until then
+#   "catalogue"  always the catalogue, even with one add-on
+#   "redirect"   always the redirect
+#
+# The Home item in the menu points at "/" in every case, so nothing about the
+# navigation changes on the day the catalogue appears: the same address simply
+# stops forwarding and starts listing.
+HOME = "auto"
+# ---------------------------------------------------------------------------
+
 
 
 # ---------------------------------------------------------------------------
@@ -215,51 +229,76 @@ def head(title, desc, canonical, og_image="/assets/brand/og-cell-editor.png"):
 """
 
 
+def home_is_catalogue():
+    return HOME == "catalogue" or (HOME == "auto" and len(ADDONS) > 1)
+
+
+# ---------------------------------------------------------------------------
+# THE MENU
+#
+# One list, rendered twice: into the drawer and into the row that a wide screen
+# shows in the header. They cannot drift apart, because they are the same list.
+#
+# Home is first and points at "/". While there is one add-on that address
+# forwards to its page; when a second one arrives it becomes the catalogue and
+# the link starts meaning what it says, with no edit here.
+# ---------------------------------------------------------------------------
+SECTION_LINKS = [
+    ("Home", "/"),
+    ("Features", "/cell-editor/#features"),
+    ("Formulas", "/cell-editor/#formulas"),
+    ("Functions", "/cell-editor/#functions"),
+    ("Checks", "/cell-editor/#checks"),
+    ("Cells", "/cell-editor/#cells"),
+    ("Screenshots", "/cell-editor/#screenshots"),
+    ("FAQ", "/cell-editor/#faq"),
+    ("Languages", "/cell-editor/#languages"),
+]
+
+# Shown on the pages that are shared by every add-on: terms, support, the
+# policies and the 404. Nothing there has sections of its own to jump to.
+SHORT_LINKS = [("Home", "/")] + [(a["name"], f'/{a["slug"]}/') for a in ADDONS]
+
+
 def header(nav_links=True):
-    links = ""
-    if nav_links:
-        links = """      <a href="/cell-editor/#features">Features</a>
-      <a href="/cell-editor/#formulas">Formulas</a>
-      <a href="/cell-editor/#functions">Functions</a>
-      <a href="/cell-editor/#checks">Checks</a>
-      <a href="/cell-editor/#cells">Cells</a>
-      <a href="/cell-editor/#screenshots">Screenshots</a>
-      <a href="/cell-editor/#faq">FAQ</a>
-      <a href="/cell-editor/#languages">Languages</a>
-"""
-    else:
-        links = '      <a href="/cell-editor/">Cell Editor</a>\n'
+    items = SECTION_LINKS if nav_links else SHORT_LINKS
+    drawer = "\n".join(f'    <a href="{href}">{label}</a>' for label, href in items)
+    row = "".join(f'<a href="{href}">{label}</a>' for label, href in items)
     return f"""<header class="nav">
   <div class="wrap">
     <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="sitemenu" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
-    <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
+    <a class="brand" href="/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
     <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install"><span class="long">Install (Coming Soon)</span><span class="short">Install</span></a>
-    <!-- Below the breakpoint this is a slide-out panel; above it, an ordinary
-         row of links. It has to sit inside the header for the wide layout to
-         work, which is why the header carries no backdrop-filter: that property
-         would make the header the containing block for the fixed panel and pin
-         it to the header's own height. -->
-    <!-- The veil sits inside the header alongside the panel on purpose. The
-         header carries z-index:60 and therefore forms its own stacking context;
-         a veil placed outside it competes with the header as a whole, wins at
-         65 > 60 and covers the panel, which makes every menu item unclickable. -->
-    <div class="menu-veil" id="menu-veil" hidden></div>
-    <nav id="sitemenu" class="sitemenu" aria-label="Sections">
-      <div class="sitemenu-top">
-        <span>Sections</span>
-        <button type="button" id="menu-close" aria-label="Close menu">&#10005;</button>
-      </div>
-{links}    </nav>
+    <!-- The same links as a row, for screens wide enough to hold them. A
+         separate element from the drawer on purpose: the drawer is an overlay
+         and has to live outside this header, while the row is part of it. -->
+    <nav class="deskmenu" aria-label="Sections">{row}</nav>
   </div>
 </header>
+<!-- The drawer and its veil are siblings of the header, never children of it.
+     The header is position:sticky with z-index:60 and therefore its own
+     stacking context: anything inside is sealed below 60 whatever z-index it
+     carries, and the order of a fixed panel against a fixed veil inside a
+     composited sticky ancestor is then left to the engine to decide. WebKit
+     decided it the other way from Blink, which is how the drawer came to open
+     underneath its own dimming layer on an iPhone. Out here the ordinary
+     rule applies and the panel is above the veil everywhere. -->
+<div class="menu-veil" id="menu-veil" hidden></div>
+<nav id="sitemenu" class="sitemenu" aria-label="Menu" aria-hidden="true">
+  <div class="sitemenu-top">
+    <span>Menu</span>
+    <button type="button" id="menu-close" aria-label="Close menu">&#10005;</button>
+  </div>
+{drawer}
+</nav>
 """
 
 
 FOOTER = f"""<footer class="wrap">
   <div class="foot">
-    <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
+    <a class="brand" href="/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
     <a href="/cell-editor/privacy/">Privacy policy</a>
     <a href="/terms/">Terms of use</a>
     <a href="/support/">Support</a>
@@ -810,6 +849,37 @@ def support_page():
 """ + FOOTER
 
 
+def catalogue():
+    """The list of add-ons, served at the root once there is more than one.
+
+    Generated from the same ADDONS registry as everything else, so a new
+    add-on appears here the moment its dictionary is appended — no edit to
+    this function, and none to the menu."""
+    cards = "\n".join(
+        f'''    <a class="card" href="/{a["slug"]}/">
+      <img src="/assets/brand/{a["slug"]}-256.png" alt="" width="256" height="256">
+      <h3>{a["name"]}</h3>
+      <p>{a["tagline"][0].upper() + a["tagline"][1:]}.</p>
+      <span class="host">For {a["host"]}</span>
+      <span class="price">{a["price"].capitalize()}</span>
+    </a>''' for a in ADDONS)
+
+    return head(
+        "handyaddons — add-ons for Google Sheets",
+        "Add-ons for Google Sheets that do one thing properly and cost nothing. "
+        "No accounts, no tracking, no permission to reach the internet.",
+        "/",
+    ) + header(False) + f"""<main id="main" class="wrap" style="padding-top:64px">
+<h1>Add-ons that do one thing properly</h1>
+<p class="sec-lede">Small tools for Google Sheets. Free, with no account to create, no tracking,
+and no permission to send anything anywhere.</p>
+<div class="cards">
+{cards}
+</div>
+</main>
+""" + FOOTER
+
+
 REDIRECT = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -838,7 +908,8 @@ NOT_FOUND = head(
 
 SITEMAP = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>{SITE}/cell-editor/</loc><lastmod>{datetime.date.today()}</lastmod><priority>1.0</priority></url>
+""" + (f'  <url><loc>{SITE}/</loc><lastmod>{datetime.date.today()}</lastmod><priority>1.0</priority></url>\n'
+       if home_is_catalogue() else "") + f"""  <url><loc>{SITE}/cell-editor/</loc><lastmod>{datetime.date.today()}</lastmod><priority>1.0</priority></url>
 """ + "".join(
     f'  <url><loc>{SITE}/{a["slug"]}/privacy/</loc><lastmod>{datetime.date.today()}</lastmod><priority>0.5</priority></url>\n'
     for a in ADDONS) + f"""  <url><loc>{SITE}/terms/</loc><lastmod>{datetime.date.today()}</lastmod><priority>0.5</priority></url>
@@ -918,7 +989,7 @@ for _a in ADDONS:
     write(f"{_a['slug']}/privacy/index.html", privacy_page(_a))
 write("terms/index.html", terms_page().replace("{limits}", limits_html()))
 write("support/index.html", support_page())
-write("index.html", REDIRECT)
+write("index.html", catalogue() if home_is_catalogue() else REDIRECT)
 write("404.html", NOT_FOUND)
 write("sitemap.xml", SITEMAP)
 write("robots.txt", ROBOTS)

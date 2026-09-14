@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&amp;family=Roboto+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/site.css?v=80c04d5612">
+<link rel="stylesheet" href="/assets/css/site.css?v=646fbfe8e0">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -30,27 +30,31 @@
     <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="sitemenu" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
-    <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
+    <a class="brand" href="/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
     <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install"><span class="long">Install (Coming Soon)</span><span class="short">Install</span></a>
-    <!-- Below the breakpoint this is a slide-out panel; above it, an ordinary
-         row of links. It has to sit inside the header for the wide layout to
-         work, which is why the header carries no backdrop-filter: that property
-         would make the header the containing block for the fixed panel and pin
-         it to the header's own height. -->
-    <!-- The veil sits inside the header alongside the panel on purpose. The
-         header carries z-index:60 and therefore forms its own stacking context;
-         a veil placed outside it competes with the header as a whole, wins at
-         65 > 60 and covers the panel, which makes every menu item unclickable. -->
-    <div class="menu-veil" id="menu-veil" hidden></div>
-    <nav id="sitemenu" class="sitemenu" aria-label="Sections">
-      <div class="sitemenu-top">
-        <span>Sections</span>
-        <button type="button" id="menu-close" aria-label="Close menu">&#10005;</button>
-      </div>
-      <a href="/cell-editor/">Cell Editor</a>
-    </nav>
+    <!-- The same links as a row, for screens wide enough to hold them. A
+         separate element from the drawer on purpose: the drawer is an overlay
+         and has to live outside this header, while the row is part of it. -->
+    <nav class="deskmenu" aria-label="Sections"><a href="/">Home</a><a href="/cell-editor/">Cell Editor</a></nav>
   </div>
 </header>
+<!-- The drawer and its veil are siblings of the header, never children of it.
+     The header is position:sticky with z-index:60 and therefore its own
+     stacking context: anything inside is sealed below 60 whatever z-index it
+     carries, and the order of a fixed panel against a fixed veil inside a
+     composited sticky ancestor is then left to the engine to decide. WebKit
+     decided it the other way from Blink, which is how the drawer came to open
+     underneath its own dimming layer on an iPhone. Out here the ordinary
+     rule applies and the panel is above the veil everywhere. -->
+<div class="menu-veil" id="menu-veil" hidden></div>
+<nav id="sitemenu" class="sitemenu" aria-label="Menu" aria-hidden="true">
+  <div class="sitemenu-top">
+    <span>Menu</span>
+    <button type="button" id="menu-close" aria-label="Close menu">&#10005;</button>
+  </div>
+    <a href="/">Home</a>
+    <a href="/cell-editor/">Cell Editor</a>
+</nav>
 <main id="main" class="doc">
 <h1>That page is not here</h1>
 <p class="updated">Error 404</p>
@@ -59,7 +63,7 @@
 </main>
 <footer class="wrap">
   <div class="foot">
-    <a class="brand" href="/cell-editor/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
+    <a class="brand" href="/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
     <a href="/cell-editor/privacy/">Privacy policy</a>
     <a href="/terms/">Terms of use</a>
     <a href="/support/">Support</a>
@@ -67,6 +71,6 @@
   </div>
 </footer>
 <button type="button" class="totop" id="totop" aria-label="Back to top">&#8593;</button>
-<script src="/assets/js/site.js?v=54563dbd77" defer></script>
+<script src="/assets/js/site.js?v=68306b230d" defer></script>
 </body>
 </html>

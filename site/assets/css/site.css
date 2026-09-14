@@ -47,23 +47,37 @@ a{color:inherit}
 .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
 img{max-width:100%;height:auto;display:block}
 .skip{position:absolute;left:-9999px}
-.skip:focus{left:12px;top:12px;background:#fff;padding:10px 16px;border-radius:8px;z-index:80;border:1px solid var(--grid-strong)}
+.skip:focus{left:12px;top:12px;background:#fff;padding:10px 16px;border-radius:8px;z-index:120;border:1px solid var(--grid-strong)}
 
-/* ---------- header ---------- */
+/* ---------- header ----------
+   BREAKPOINT 1320px: the width at which the drawer gives way to a row of links
+   in the header. It appears three times and all three must agree: in the
+   .nav .wrap rule just below, in the wide-screen block further down, and in
+   site.js (var WIDE). */
 .nav{position:sticky;top:0;z-index:60;background:#fff;
   border-bottom:1px solid var(--grid-strong)}
 .nav .wrap{display:flex;align-items:center;gap:clamp(10px,2.5vw,16px);
   padding-top:10px;padding-bottom:10px;min-height:64px}
-@media(min-width:1060px){.nav .wrap{gap:26px;min-height:96px}}
+@media(min-width:1320px){.nav .wrap{gap:26px;min-height:96px}}
 
-/* the button that opens the menu, left of the logo */
-.menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;flex:none;
-  width:44px;height:44px;padding:0 10px;cursor:pointer;
-  background:#fff;border:1px solid var(--grid-strong);border-radius:10px}
-.menu-btn span{display:block;height:2px;background:var(--ink);border-radius:2px;transition:transform .2s,opacity .2s}
-.menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+/* ---------- the button that opens the drawer ----------
+   This is deliberately NOT a flex container. WebKit — every browser on iOS —
+   wraps the children of a <button> in an anonymous box of its own, and that
+   box shrink-wraps its contents instead of stretching. Three empty <span>s
+   that took their width from align-items:stretch therefore came out 0px wide
+   on an iPhone: the button drew its border and nothing inside it. Absolute
+   positions with an explicit width are the one form every engine agrees on. */
+.menu-btn{position:relative;display:block;flex:none;width:44px;height:44px;padding:0;
+  cursor:pointer;background:#fff;border:1px solid var(--grid-strong);border-radius:10px;
+  -webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent}
+.menu-btn span{position:absolute;left:11px;width:20px;height:2px;background:var(--ink);
+  border-radius:2px;transition:transform .2s,opacity .2s}
+.menu-btn span:nth-child(1){top:14px}
+.menu-btn span:nth-child(2){top:20px}
+.menu-btn span:nth-child(3){top:26px}
+.menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
-.menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 @media (prefers-reduced-motion:reduce){.menu-btn span{transition:none}}
 
 .brand{display:flex;align-items:center;gap:clamp(7px,2vw,13px);font-weight:600;letter-spacing:-.03em;
@@ -73,50 +87,75 @@ img{max-width:100%;height:auto;display:block}
 .foot .brand{font-size:clamp(19px,5vw,28px)}
 .foot .brand img{width:clamp(28px,6vw,38px);height:clamp(28px,6vw,38px)}
 
-/* the panel itself: off-canvas on a phone, an ordinary row on a wide screen */
-.sitemenu{position:fixed;left:0;top:0;bottom:0;width:min(300px,82vw);z-index:70;
+/* ---------- the slide-out drawer and its veil ----------
+   Both are siblings of <header>, not children of it, and that is the whole
+   point. The header is position:sticky with z-index:60, which makes it a
+   stacking context: everything inside it is sealed below z-index 60 however
+   large its own z-index, and the paint order of a fixed panel against a fixed
+   veil inside a composited sticky ancestor is then at the mercy of the engine.
+   WebKit resolved it the other way round from Blink, which is why the drawer
+   opened under its own dimming layer on iPhone: grey, and deaf to taps.
+   Out here, in the root stacking context, 95 > 90 > 60 is plainly true
+   in every browser, and no compositing decision can reorder it. */
+.menu-veil{position:fixed;top:0;right:0;bottom:0;left:0;z-index:90;
+  background:rgba(10,20,16,.42);opacity:0;visibility:hidden;
+  transition:opacity .24s,visibility 0s linear .24s}
+.menu-veil.on{opacity:1;visibility:visible;transition:opacity .24s,visibility 0s}
+
+.sitemenu{position:fixed;left:0;top:0;bottom:0;width:min(300px,82vw);z-index:95;
   display:flex;flex-direction:column;gap:2px;padding:14px 18px 24px;
   background:#fff;border-right:1px solid var(--grid-strong);
   box-shadow:12px 0 40px -24px rgba(16,35,27,.5);
-  transform:translateX(-102%);transition:transform .24s cubic-bezier(.22,.7,.3,1);
-  overflow-y:auto;font-size:17px;color:var(--ink-2)}
-.sitemenu.open{transform:none}
+  transform:translateX(-102%);visibility:hidden;
+  transition:transform .24s cubic-bezier(.22,.7,.3,1),visibility 0s linear .24s;
+  overflow-y:auto;overscroll-behavior:contain;font-size:17px;color:var(--ink-2)}
+/* visibility, not transform alone: a drawer merely pushed off the left edge
+   still keeps its links in the tab order and in a screen reader's list, and
+   focusing one of them drags the viewport sideways. */
+.sitemenu.open{transform:none;visibility:visible;
+  transition:transform .24s cubic-bezier(.22,.7,.3,1),visibility 0s}
 .sitemenu a{text-decoration:none;padding:12px 12px;border-radius:9px;position:relative;color:var(--ink-2)}
 .sitemenu a:hover{color:var(--green);background:var(--green-wash)}
 .sitemenu a.here{color:var(--ink);font-weight:500;background:var(--green-wash)}
+.sitemenu a.here::before{content:"";position:absolute;left:4px;top:10px;bottom:10px;width:3px;
+  background:var(--green-hi);border-radius:2px}
 .sitemenu-top{display:flex;align-items:center;justify-content:space-between;
   padding:6px 8px 14px 12px;margin-bottom:6px;border-bottom:1px solid var(--grid);
   font-size:14px;color:var(--ink-3);letter-spacing:.02em}
 .sitemenu-top button{width:40px;height:40px;border:1px solid var(--grid-strong);border-radius:10px;
   background:#fff;color:var(--ink);font-size:17px;line-height:1;cursor:pointer}
 .sitemenu-top button:hover{border-color:var(--ink-3)}
-.menu-veil{position:fixed;inset:0;z-index:65;background:rgba(10,20,16,.42)}
-@media (prefers-reduced-motion:reduce){.sitemenu{transition:none}}
+@media (prefers-reduced-motion:reduce){.sitemenu,.menu-veil{transition:none}}
 
-/* The panel is the menu at every width. Eight links, a 40px wordmark and the
-   install button cannot share one row inside 1140px — measured, not guessed —
-   and a menu that behaves the same everywhere has no breakpoint to get wrong. */
-.sitemenu a.here::before{content:"";position:absolute;left:4px;top:10px;bottom:10px;width:3px;
-  background:var(--green-hi);border-radius:2px}
-/* Wide screens: the panel unfolds into a plain row. The breakpoint is set from
-   measurement, not taste — below it the links, the wordmark and the button do
-   not fit on one line inside the 1140px container. */
-@media(min-width:1180px){
+/* ---------- the same links as a row, on a wide screen ----------
+   A separate element rather than the same one reshaped by a media query. The
+   drawer is an overlay and the row is part of the header; asking one element
+   to be both is what forced the overlay to live inside the header in the first
+   place. build.py writes both lists from one source, so they cannot drift. */
+.deskmenu{display:none}
+@media(min-width:1320px){
   .menu-btn{display:none}
-  .sitemenu{position:static;width:auto;flex-direction:row;align-items:center;gap:18px;
-    padding:0;background:none;border:0;box-shadow:none;transform:none;overflow:visible;
-    margin-left:auto;font-size:15px}
-  .sitemenu-top{display:none}
-  .sitemenu a{padding:4px 0;border-radius:0;white-space:nowrap}
-  .sitemenu a:hover,.sitemenu a.here{background:none}
-  .sitemenu a.here::before{display:none}
-  .sitemenu a.here::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2px;
+  .sitemenu,.menu-veil{display:none}
+  /* Nine links, a 31px wordmark and the install button need 1195px between
+     them. The page's own container is 1140px wide, 1092px of it usable, so
+     the header — and only the header — is given a wider one. Measured, not
+     guessed: below 1320px they do not fit and the drawer stays. */
+  .nav .wrap{max-width:1300px}
+  .deskmenu{display:flex;align-items:center;gap:18px;margin-left:auto;font-size:15px}
+  .deskmenu a{position:relative;text-decoration:none;padding:4px 0;white-space:nowrap;color:var(--ink-2)}
+  .deskmenu a:hover{color:var(--green)}
+  .deskmenu a.here{color:var(--ink);font-weight:500}
+  .deskmenu a.here::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2px;
     background:var(--green-hi);border-radius:2px}
   .brand{font-size:31px;flex:none}
   .brand img{width:42px;height:42px}
-  .menu-veil{display:none}
 }
-body.menu-open{overflow:hidden}
+
+/* Scroll lock. overflow:hidden on <body> is ignored by Safari on iOS, where
+   the page keeps scrolling behind the open drawer; pinning the body at its
+   current offset is the only thing that holds there. site.js writes the top
+   offset and puts the scroll position back when the drawer closes. */
+body.menu-open{overflow:hidden;position:fixed;left:0;right:0;width:100%}
 
 .btn{display:inline-flex;align-items:center;gap:9px;font:inherit;font-size:15.5px;font-weight:500;
   padding:12px 20px;border-radius:8px;text-decoration:none;border:1px solid transparent;cursor:pointer;
@@ -508,3 +547,22 @@ body.lb-open{overflow:hidden}
     margin-bottom:5px;font-weight:500}
   .doc td code{overflow-wrap:anywhere}
 }
+
+/* ---------- the catalogue at the root of the site ----------
+   Dormant while there is one add-on: build.py only emits index.html as a
+   catalogue once ADDONS holds more than one entry, and serves the redirect
+   until then. The styles are here so that the switch needs no CSS edit. */
+.cards{display:grid;gap:20px}
+@media(min-width:720px){.cards{grid-template-columns:1fr 1fr}}
+@media(min-width:1060px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{display:flex;flex-direction:column;gap:14px;padding:26px 24px 24px;background:#fff;
+  border:1px solid var(--grid-strong);border-radius:12px;text-decoration:none;color:inherit;
+  transition:border-color .15s,transform .15s,box-shadow .15s}
+.card:hover{border-color:var(--green-hi);transform:translateY(-2px);
+  box-shadow:0 18px 34px -26px rgba(16,35,27,.55)}
+.card img{width:56px;height:56px;border-radius:12px;flex:none}
+.card h3{margin:0;font-size:20px;font-weight:600;letter-spacing:-.02em}
+.card p{margin:0;font-size:15.5px;color:var(--ink-2);line-height:1.55}
+.card .host{margin-top:auto;padding-top:6px;font-size:13.5px;color:var(--ink-3)}
+.card .price{align-self:flex-start;font-size:13px;font-weight:600;color:var(--green);
+  background:var(--green-wash);border-radius:20px;padding:3px 11px}

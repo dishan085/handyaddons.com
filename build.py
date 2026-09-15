@@ -7,7 +7,7 @@ SITE = "https://handyaddons.com"
 EMAIL = "pobi.olex@gmail.com"
 OWNER = "handyaddons, a sole proprietorship registered in Ukraine"
 OWNER_SHORT = "handyaddons"
-UPDATED = "11 September 2026"
+UPDATED = "15 September 2026"
 
 # ---------------------------------------------------------------------------
 # When Google issues the Marketplace listing URL, paste it here, re-run this
@@ -82,8 +82,13 @@ ADDONS = [
                    "<code>script.external_request</code>, the permission an Apps Script add-on needs in order "
                    "to contact any server on the internet. Without it, the add-on is technically incapable of "
                    "transmitting your data anywhere — this is enforced by Google, not merely promised by us."),
-        "prefs": ("whether you last used the sidebar or the window, your chosen font size, and the size of "
-                  "the window"),
+        "prefs": ("the interface mode you last used, sidebar or window; your chosen font size; "
+                  "whether your browser is Firefox, which decides what kind of window the add-on "
+                  "can safely open; and the date you first opened the editor"),
+        "first_run": ("The date of first use is kept for one reason. If the add-on ever becomes "
+                      "paid, everyone already using it for free keeps their access, and that "
+                      "cannot be worked out after the fact. The date stays inside your own Google "
+                      "account, where handyaddons has no way to see it."),
         "limits": [
             ("Firefox",
              "The separate editor window opens there as a modal dialog. It cannot be dragged, and the sheet "
@@ -689,12 +694,12 @@ def privacy_page(a):
 <p>{a["absent"]}</p>
 
 <h2>5. What is stored, and where</h2>
-<p>{a["name"]} remembers a small number of your preferences so it can open the way you left it: {a["prefs"]}. These are stored using Google's own properties service, inside your Google account, and are visible only to the add-on. They contain no document content and no personal information.</p>
-<p>Removing the add-on removes these preferences with it.</p>
+<p>{a["name"]} stores a small number of values so it can open the way you left it: {a["prefs"]}.</p>
+<p>These are held in Google's own properties service, in the pair &ldquo;this user, this add-on&rdquo;, inside your own Google account. Only the add-on can read them. They contain no document content and no personal information, and removing the add-on removes them with it.</p>
+<p>{a["first_run"]}</p>
 
 <h2>6. Analytics, advertising and tracking</h2>
-<p>The add-on contains no analytics, no advertising, no tracking pixels and no cookies. We do not know how often you use it or what you do with it. We receive no usage reports of any kind.</p>
-
+<p>The add-on contains no analytics, no advertising, no tracking pixels and no cookies. Nothing is reported back to handyaddons: we do not know how often you use it, what you do with it, or whether you are still using it at all. The one date described in section 5 never leaves your own Google account.</p>
 <h2>7. Limited use disclosure</h2>
 <p>handyaddons' use and transfer of information received from Google APIs to any other app will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
 

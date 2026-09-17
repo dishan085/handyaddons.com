@@ -7,7 +7,7 @@ SITE = "https://handyaddons.com"
 EMAIL = "pobi.olex@gmail.com"
 OWNER = "handyaddons, a sole proprietorship registered in Ukraine"
 OWNER_SHORT = "handyaddons"
-UPDATED = "15 September 2026"
+UPDATED = "17 September 2026"
 
 # ---------------------------------------------------------------------------
 # When Google issues the Marketplace listing URL, paste it here, re-run this
@@ -700,106 +700,58 @@ def privacy_page(a):
 
 <h2>6. Analytics, advertising and tracking</h2>
 <p>The add-on contains no analytics, no advertising, no tracking pixels and no cookies. Nothing is reported back to handyaddons: we do not know how often you use it, what you do with it, or whether you are still using it at all. The one date described in section 5 never leaves your own Google account.</p>
-<h2>7. Limited use disclosure</h2>
+<h2>7. Sharing and disclosure of Google user data</h2>
+<p>We do not transfer or disclose your information to third parties for purposes other than the ones described in this policy. In practice there are no such purposes, so there is no transfer at all.</p>
+<p>Google user data reached by {a["name"]} is not sold, rented, traded, published, or shared with anyone. There are no third parties involved in running this add-on: no service providers, no sub-processors, no hosting partners, no analytics providers, no advertising networks, no data brokers, and no affiliates. handyaddons operates no server that this data could be sent to.</p>
+<p>This is enforced technically rather than promised. The add-on does not request the <code>script.external_request</code> permission, which is the permission Google requires before any Apps Script code may contact an address on the internet. Without it, the add-on is incapable of transmitting anything anywhere, whatever its code might say.</p>
+<p>The same applies to legal requests. If we were compelled by a court or an authority to hand over your spreadsheet content, we would have nothing to hand over: we hold no copy of it, and no means of obtaining one.</p>
+
+<h2>8. How your data is protected</h2>
+<p>Security procedures are in place to protect the confidentiality of your data. The most important one is structural: your data never leaves Google.</p>
+<ul>
+<li><strong>It stays inside Google's infrastructure.</strong> The add-on runs in Google's Apps Script environment, inside your own Google account. The cell you edit travels between the spreadsheet and the editor panel and back again, and never crosses out of Google's systems.</li>
+<li><strong>It is encrypted in transit.</strong> Every exchange between the editor panel and the add-on takes place over HTTPS within Google's network. This website is served over HTTPS as well.</li>
+<li><strong>It is encrypted at rest.</strong> The few preferences described in section 5 are held by Google's own properties service, which Google encrypts at rest, in the pair &ldquo;this user, this add-on&rdquo;. No other add-on and no other user can read them.</li>
+<li><strong>Access is limited to the file you have open.</strong> The add-on requests <code>spreadsheets.currentonly</code>, the narrowest spreadsheet permission Google offers. It grants access to the one spreadsheet the add-on was opened in, and only while it is open. Every other file in your account is out of reach.</li>
+<li><strong>It cannot be sent anywhere.</strong> As explained in section 7, the add-on has no permission to make network requests.</li>
+<li><strong>Nobody at handyaddons can see it.</strong> We run no server, no database, and no backup of your content. There is no administrative console, no support tool, and no export through which anyone &mdash; including the developer &mdash; could reach what is in your spreadsheet. The access does not exist to be abused or stolen.</li>
+</ul>
+
+<h2>9. Data retention and deletion</h2>
+<p>We retain no Google user data, because we never receive any. The contents of a cell are read when you open the editor, held in memory while you work, and written back when you save. Nothing remains once the panel is closed.</p>
+<p>The four preference values described in section 5 are kept inside your own Google account for as long as the add-on stays installed. They are deleted automatically when you remove the add-on, which you can do at any time from the Extensions menu in Google Sheets. There are no archives, backups, or copies elsewhere, so nothing survives that deletion.</p>
+
+<h2>10. AI and machine learning</h2>
+<p>Google Workspace APIs are not used to develop, improve, or train non-personalized artificial intelligence or machine learning models. Google user data is never used, transferred, or sold for the development, improvement, or training of any AI or ML model, generalized or otherwise.</p>
+<p>{a["name"]} contains no AI or machine learning model, is not built on one, and integrates with no AI service of any kind &mdash; not Google's own, not a third party's, not through an aggregator, gateway, or model hub, and not a self-hosted or offline model. It sends no prompt anywhere and receives no generated content. As with everything else in this policy, this is guaranteed by the absence of the <code>script.external_request</code> permission.</p>
+<p>One point deserves a plain explanation, because it is easy to misread from the source code. {a["name"]} offers autocomplete and descriptions for the built-in functions of Google Sheets &mdash; around seven hundred of them, from <code>SUM</code> to <code>VLOOKUP</code>. Google has added <code>AI()</code> and <code>GEMINI()</code> to that list of built-in functions, so the add-on carries their names, a one-line description, and a link to Google's documentation, exactly as it does for every other function. That reference text is the only place those words appear. If you write such a formula, it is Google Sheets that evaluates it, under Google's own terms; the add-on merely writes the text of your formula into the cell, as it would with any other formula, and never calls Gemini or any other model itself.</p>
+
+<h2>11. Limited use disclosure</h2>
 <p>handyaddons' use and transfer of information received from Google APIs to any other app will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
 
-<h2>8. This website</h2>
+<h2>12. Third-party resources loaded by the editor</h2>
+<p>The editor panel is built on two open-source libraries, Quill and CodeMirror, which your browser downloads from two public code distribution networks: jsDelivr and cdnjs. These are static script and stylesheet files. No part of your spreadsheet, and no information about you, is sent to either of them.</p>
+<p>What they do see, as any website does when your browser requests a file from it, is your browser's IP address and the name of the file requested. We have no account with either service and receive nothing back from them. Their own policies apply to that request: <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net">jsDelivr</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a>, which operates cdnjs.</p>
+
+<h2>13. This website</h2>
 <p>handyaddons.com is a set of static pages served by GitHub Pages. It sets no cookies and runs no analytics. GitHub keeps standard server logs, which include visitors' IP addresses, as described in the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">GitHub Privacy Statement</a>. The site loads its typefaces from Google Fonts, which means your browser's IP address is visible to Google when a page loads.</p>
 
-<h2>9. Your rights</h2>
+<h2>14. Your rights</h2>
 <p>The GDPR gives you the right to ask what personal data is held about you, to have it corrected or erased, to object to its processing, and to receive a copy of it. The same rights, under different names, exist in the UK, California and a growing number of other places.</p>
 <p>In our case the honest answer to all of them is the same: we hold nothing to show you, correct, or erase. We have no account for you, no record of your use of the add-on, and no copy of anything from your documents. The preferences described in section 5 live inside your own Google account and disappear when you remove the add-on.</p>
 <p>You are welcome to ask anyway, at <a href="mailto:{EMAIL}">{EMAIL}</a>, and we will answer within thirty days. If the answer does not satisfy you, you may complain to your national data protection authority.</p>
 
-<h2>10. Links to other places</h2>
+<h2>15. Links to other places</h2>
 <p>The add-on links to Google's own reference pages, and this site links to Google's policies and to the Marketplace. Those destinations are not ours, and their own privacy practices apply once you arrive there.</p>
 
-<h2>11. Children</h2>
+<h2>16. Children</h2>
 <p>{a["name"]} is a productivity tool and is not directed at children. We do not knowingly collect information from anyone, including children.</p>
 
-<h2>12. Changes to this policy</h2>
+<h2>17. Changes to this policy</h2>
 <p>If the add-on ever requests a new permission or begins handling data differently, this page will be updated before that change reaches you, and the date at the top will change with it.</p>
 
-<h2>13. Contact</h2>
+<h2>18. Contact</h2>
 <p>Questions about this policy, or about anything the add-on does with your data: <a href="mailto:{EMAIL}">{EMAIL}</a>. We answer in English and Ukrainian.</p>
-
-<p style="margin-top:40px"><a href="/{a["slug"]}/">Back to {a["name"]}</a> &middot; <a href="/terms/">Terms of use</a> &middot; <a href="/support/">Support</a></p>
-</main>
-""" + FOOTER
-
-
-def limits_html():
-    """The known-limitations section of the shared terms, one block per add-on.
-    A new add-on appends its own block here simply by joining the registry."""
-    out = []
-    for a in ADDONS:
-        items = "\n".join(
-            f'<p><b>{h}.</b> {txt}</p>' for h, txt in a["limits"])
-        out.append(f'<h3>{a["name"]}</h3>\n{items}')
-    return "\n\n".join(out)
-
-
-def terms_page():
-    names = [a["name"] for a in ADDONS]
-    listed = names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
-    plural = "add-on" if len(names) == 1 else "add-ons"
-
-    return head(
-        "Terms of use | handyaddons",
-        "Terms of use for the handyaddons add-ons: the license granted, the warranty "
-        "position, limitation of liability and the known limitations of each add-on.",
-        "/terms/",
-    ) + header(False) + f"""<main id="main" class="doc">
-<h1>Terms of use</h1>
-<p class="updated">All handyaddons {plural} &middot; last updated {UPDATED}</p>
-
-<p>These terms govern your use of the {plural} published by {OWNER} — at present {listed}. Installing or using an add-on means you accept them. If you do not accept them, uninstall it.</p>
-<p>How each add-on handles data is set out in its own privacy policy, because each one asks for its own permissions. For {ADDONS[0]["name"]} that is the <a href="/{ADDONS[0]["slug"]}/privacy/">{ADDONS[0]["name"]} privacy policy</a>, which forms part of these terms.</p>
-
-<h2>1. What you are getting</h2>
-<p>Each add-on is a tool that runs inside a Google application and does the job described on its page on this site. They are provided free of charge, for personal and commercial use alike, with no account to create and no subscription.</p>
-<p>We may change, add or remove features at any time. If a feature you depend on is going away, we will try to say so on this site first, but we cannot promise notice in every case.</p>
-
-<h2>2. Your license</h2>
-<p>The add-ons themselves — their code, their interfaces and their texts — remain the property of the publisher. Nothing here transfers ownership of them to you.</p>
-<p>What you receive is a license to use them: personal or commercial, worldwide, free of charge, non-exclusive and non-transferable, on as many documents and in as many accounts as you like, for as long as these terms are in force. The license is revocable, but in practice the only thing that would end it is your breaking the rules in the next section.</p>
-<p>Note that this is a real commercial license, not a "personal, non-commercial viewing" permission of the kind that boilerplate website terms often grant by accident. Using a handyaddons add-on at work, inside a company, is exactly what it is for.</p>
-
-<h2>3. What you may not do</h2>
-<p>You may not resell an add-on, redistribute it as your own, decompile or reverse engineer it, strip out its authorship notices, or use it to do anything unlawful or to interfere with Google's services.</p>
-
-<h2>4. Your data and your documents</h2>
-<p>Your content remains entirely yours. We neither claim rights over it nor receive a copy of it. The privacy policy of each add-on describes exactly what it touches and what it remembers.</p>
-
-<h2>5. Provided as is</h2>
-<p>The add-ons are provided as is and as available, without warranty of any kind, whether express or implied, including any implied warranty of merchantability, fitness for a particular purpose, or non-infringement. We do not warrant that they will be uninterrupted, error free, or compatible with every browser, locale or document.</p>
-
-<h2>6. Back up your work</h2>
-<p>These add-ons write to your documents. Google keeps its own version history, and we strongly recommend relying on it. Keep backups of anything you cannot afford to lose, as you would with any tool that edits your files.</p>
-
-<h2>7. Limitation of liability</h2>
-<p>To the fullest extent permitted by law, handyaddons and its developer will not be liable for any indirect, incidental, special or consequential damages, nor for any loss of data, profits, revenue or business, arising out of or connected with your use of or inability to use an add-on — even if we have been advised that such damages are possible.</p>
-<p>Nothing in these terms limits liability that cannot be limited under applicable law.</p>
-
-<h2>8. Known limitations</h2>
-<p>Every add-on has boundaries it cannot cross, usually imposed by a browser or by Google itself. They are listed here, by add-on, so that nothing in section 5 comes as a surprise.</p>
-
-{{limits}}
-
-<h2>9. Not affiliated with Google</h2>
-<p>These are independent add-ons. handyaddons is not affiliated with, endorsed by or sponsored by Google LLC. Google, Google Sheets and Google Workspace are trademarks of Google LLC. Your use of Google's own applications remains governed by your agreement with Google.</p>
-
-<h2>10. Ending it</h2>
-<p>You may stop using an add-on at any time by removing it from the Extensions menu or from your Google Workspace Marketplace app list. We may discontinue an add-on, in whole or in part, at any time.</p>
-
-<h2>11. Changes to these terms</h2>
-<p>These terms may be updated, including when a new add-on is added to the list above. The date at the top of this page shows when they last changed. Continuing to use an add-on after a change means you accept the revised terms.</p>
-
-<h2>12. Governing law</h2>
-<p>These terms are governed by the laws of Ukraine, the country in which the publisher is registered, without regard to conflict of law rules.</p>
-
-<h2>13. Contact</h2>
-<p>Questions, bug reports and feature requests: <a href="mailto:{EMAIL}">{EMAIL}</a>, or see the <a href="/support/">support page</a>.</p>
 </main>
 """ + FOOTER
 

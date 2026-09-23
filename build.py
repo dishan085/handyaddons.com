@@ -248,11 +248,11 @@ SECTION_LINKS = [
     ("Features", "/cell-editor/#features"),
     ("Formulas", "/cell-editor/#formulas"),
     ("Functions", "/cell-editor/#functions"),
-    ("Checks", "/cell-editor/#checks"),
     ("Cells", "/cell-editor/#cells"),
+    ("Checks", "/cell-editor/#checks"),
     ("Screenshots", "/cell-editor/#screenshots"),
-    ("FAQ", "/cell-editor/#faq"),
     ("Languages", "/cell-editor/#languages"),
+    ("FAQ", "/cell-editor/#faq"),
 ]
 
 # Shown on the pages that are shared by every add-on: terms, support, the

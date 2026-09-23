@@ -283,6 +283,11 @@ h2{font-size:clamp(24px,5.6vw,38px);line-height:1.12;letter-spacing:-.032em;font
 @media(min-width:700px){.feat{grid-template-columns:1fr 1fr}}
 @media(min-width:1020px){.feat{grid-template-columns:repeat(3,1fr)}}
 .cellx{background:#fff;padding:26px 24px}
+/* Піктограма картки. fill:none і stroke:currentColor означають, що
+   колір задається один раз тут, а не в кожному з дев'яти малюнків. */
+.cellx .fico{display:block;width:26px;height:26px;margin:0 0 14px;
+  fill:none;stroke:var(--green);stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
 .cellx h3{font-size:17px;font-weight:600;margin:0 0 8px;letter-spacing:-.015em}
 .cellx p{margin:0;font-size:15px;color:var(--ink-2);line-height:1.55}
 

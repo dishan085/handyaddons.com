@@ -7,7 +7,7 @@ SITE = "https://handyaddons.com"
 EMAIL = "pobi.olex@gmail.com"
 OWNER = "handyaddons, a sole proprietorship registered in Ukraine"
 OWNER_SHORT = "handyaddons"
-UPDATED = "17 September 2026"
+UPDATED = "11 September 2026"
 
 # ---------------------------------------------------------------------------
 # When Google issues the Marketplace listing URL, paste it here, re-run this
@@ -380,16 +380,32 @@ CATEGORIES = [
     ('Filter', 'Filtering, sorting and removing duplicates from ranges.', 'FILTER SORT SORTN UNIQUE'),
 ]
 
+# Піктограми намальовані тут, а не взяті з бібліотеки: дев'ять простих
+# контурів дешевше намалювати, ніж тягнути іконковий шрифт з CDN — і не
+# доводиться нічого дописувати в розділ 12 політики. Малюнок береться
+# з currentColor, тож колір задається в CSS одним правилом.
+ICONS = {
+    "panel":   '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M15 5v14"/>',
+    "code":    '<path d="M9 6 4 12l5 6"/><path d="m15 6 5 6-5 6"/>',
+    "hint":    '<path d="M20 4H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h4v4l4-4h8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Z"/>',
+    "pick":    '<rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="4 3"/><path d="m10 9.5 8.5 3.2-3.5 1.4-1.4 3.5Z"/>',
+    "move":    '<path d="M12 4v16M4 12h16"/><path d="m9.5 6.5 2.5-2.5 2.5 2.5M9.5 17.5l2.5 2.5 2.5-2.5M6.5 9.5 4 12l2.5 2.5M17.5 9.5 20 12l-2.5 2.5"/>',
+    "zoom":    '<path d="M3 18 8 6l5 12"/><path d="M4.6 14h6.8"/><path d="M16 10h6M19 7v6"/>',
+    "rich":    '<path d="M7 5h5.5a3.5 3.5 0 0 1 0 7H7Z"/><path d="M7 12h6.5a3.5 3.5 0 0 1 0 7H7Z"/>',
+    "locale":  '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/>',
+    "counter": '<path d="M3 16.5a9 9 0 1 1 18 0"/><path d="m12 16.5 4.6-5.6"/><circle cx="12" cy="16.5" r="1.3"/>',
+}
+
 FEATURES = [
-    ("Sidebar or window", "A narrow panel that stays beside the sheet, or a wide resizable window for long content. One button switches, and your choice is remembered."),
-    ("Colored syntax", "Functions, references, numbers, strings and brackets each take their own color, and every distinct reference gets its own shade."),
-    ("Hints while you type", "Open a bracket and the function signature appears with the current argument highlighted, described in your spreadsheet's language."),
-    ("Pick ranges with the mouse", "Put the cursor where the address belongs, select cells on the sheet, and the reference lands in the formula — cross-sheet names quoted correctly."),
-    ("Move without closing", "Step to the next cell with the arrow keys or type an address to jump, across sheets. Unsaved changes are flagged before you leave."),
-    ("Scale the text", "Enlarge the editor's font without changing the size of the characters in the cell itself. Built for long sessions and for low vision."),
-    ("Rich text mode", "Bold, italic, underline, strikethrough, color, point sizes, lists, several hyperlinks inside one cell, and an emoji picker with search."),
-    ("Your locale decides", "Argument and decimal separators follow your spreadsheet's own setting, and the pair in force is always shown at the bottom of the window."),
-    ("Character counter", "It appears as content nears the 50 000 character cell limit and turns red past it, blocking the save rather than truncating silently."),
+    ("panel", "Sidebar or window", "A narrow panel that stays beside the sheet, or a wide resizable window for long content. One button switches, and your choice is remembered."),
+    ("code", "Colored syntax", "Functions, references, numbers, strings and brackets each take their own color, and every distinct reference gets its own shade."),
+    ("hint", "Hints while you type", "Open a bracket and the function signature appears with the current argument highlighted, described in your spreadsheet's language."),
+    ("pick", "Pick ranges with the mouse", "Put the cursor where the address belongs, select cells on the sheet, and the reference lands in the formula — cross-sheet names quoted correctly."),
+    ("move", "Move without closing", "Step to the next cell with the arrow keys or type an address to jump, across sheets. Unsaved changes are flagged before you leave."),
+    ("zoom", "Scale the text", "Enlarge the editor's font without changing the size of the characters in the cell itself. Built for long sessions and for low vision."),
+    ("rich", "Rich text mode", "Bold, italic, underline, strikethrough, color, point sizes, lists, several hyperlinks inside one cell, and an emoji picker with search."),
+    ("locale", "Your locale decides", "Argument and decimal separators follow your spreadsheet's own setting, and the pair in force is always shown at the bottom of the window."),
+    ("counter", "Character counter", "It appears as content nears the 50 000 character cell limit and turns red past it, blocking the save rather than truncating silently."),
 ]
 
 CHECKS = [
@@ -430,7 +446,9 @@ SCHEMA = """<script type="application/ld+json">
 
 def landing():
     feats = "\n".join(
-        f'    <div class="cellx"><h3>{t}</h3><p>{p}</p></div>' for t, p in FEATURES)
+        f'    <div class="cellx"><svg class="fico" viewBox="0 0 24 24" '
+        f'aria-hidden="true">{ICONS[i]}</svg>'
+        f'<h3>{t}</h3><p>{p}</p></div>' for i, t, p in FEATURES)
     checks = "\n".join(
         f'      <li><span class="tag {k}">{"error" if k=="e" else "warning"}</span>{t}</li>'
         for k, t in CHECKS)

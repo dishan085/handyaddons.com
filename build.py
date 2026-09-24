@@ -12,7 +12,7 @@ UPDATED = "11 September 2026"
 # ---------------------------------------------------------------------------
 # When Google issues the Marketplace listing URL, paste it here, re-run this
 # script, and every install button on the site becomes live at once.
-MARKETPLACE_URL = ""
+MARKETPLACE_URL = "https://workspace.google.com/marketplace/app/cell_editor/540002896802"
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
@@ -192,6 +192,17 @@ def figure(name, alt, caption, cls="shot"):
             f'    </figure>')
 
 
+def cta_button():
+    """Кнопка в шапці. Доки MARKETPLACE_URL порожній — веде на якір
+    #install і каже «Coming Soon», як було до публікації."""
+    if MARKETPLACE_URL:
+        return (f'<a class="btn btn-solid btn-sm cta" href="{MARKETPLACE_URL}">'
+                f'<span class="long">Install</span><span class="short">Install</span></a>')
+    return ('<a class="btn btn-solid btn-sm cta" href="/cell-editor/#install">'
+            '<span class="long">Install (Coming Soon)</span>'
+            '<span class="short">Install</span></a>')
+
+
 def install_button(label="Install from Google Workspace Marketplace"):
     if MARKETPLACE_URL:
         return f'<a class="btn btn-solid" href="{MARKETPLACE_URL}">{label}</a>'
@@ -270,7 +281,7 @@ def header(nav_links=True):
       <span></span><span></span><span></span>
     </button>
     <a class="brand" href="/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
-    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install"><span class="long">Install (Coming Soon)</span><span class="short">Install</span></a>
+    {cta_button()}
     <!-- The same links as a row, for screens wide enough to hold them. A
          separate element from the drawer on purpose: the drawer is an overlay
          and has to live outside this header, while the row is part of it. -->
@@ -391,7 +402,9 @@ ICONS = {
     "pick":    '<rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="4 3"/><path d="m10 9.5 8.5 3.2-3.5 1.4-1.4 3.5Z"/>',
     "move":    '<path d="M12 4v16M4 12h16"/><path d="m9.5 6.5 2.5-2.5 2.5 2.5M9.5 17.5l2.5 2.5 2.5-2.5M6.5 9.5 4 12l2.5 2.5M17.5 9.5 20 12l-2.5 2.5"/>',
     "zoom":    '<path d="M3 18 8 6l5 12"/><path d="M4.6 14h6.8"/><path d="M16 10h6M19 7v6"/>',
-    "rich":    '<path d="M7 5h5.5a3.5 3.5 0 0 1 0 7H7Z"/><path d="M7 12h6.5a3.5 3.5 0 0 1 0 7H7Z"/>',
+    "rich":    ('<path d="M2.5 15 6.2 5l3.7 10"/><path d="M3.8 12h4.8"/>'
+                '<circle cx="15.7" cy="12.2" r="3.2"/><path d="M18.9 9v6"/>'
+                '<path d="M2.5 19.5h17" stroke="#e8710a" stroke-width="2.4"/>'),
     "locale":  '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/>',
     "counter": '<path d="M3 16.5a9 9 0 1 1 18 0"/><path d="m12 16.5 4.6-5.6"/><circle cx="12" cy="16.5" r="1.3"/>',
 }

@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&amp;family=Roboto+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/site.css?v=646fbfe8e0">
+<link rel="stylesheet" href="/assets/css/site.css?v=7f53d2f9cb">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -31,7 +31,7 @@
       <span></span><span></span><span></span>
     </button>
     <a class="brand" href="/"><img src="/assets/brand/handyaddons-64.png" alt=""><span class="wm"><i>handy</i>addons</span></a>
-    <a class="btn btn-solid btn-sm cta" href="/cell-editor/#install"><span class="long">Install (Coming Soon)</span><span class="short">Install</span></a>
+    <a class="btn btn-solid btn-sm cta" href="https://workspace.google.com/marketplace/app/cell_editor/540002896802"><span class="long">Install</span><span class="short">Install</span></a>
     <!-- The same links as a row, for screens wide enough to hold them. A
          separate element from the drawer on purpose: the drawer is an overlay
          and has to live outside this header, while the row is part of it. -->
@@ -89,27 +89,57 @@
 <h2>6. Analytics, advertising and tracking</h2>
 <p>The add-on contains no analytics, no advertising, no tracking pixels and no cookies. We do not know how often you use it or what you do with it. We receive no usage reports of any kind.</p>
 
-<h2>7. Limited use disclosure</h2>
+<h2>7. Sharing and disclosure of Google user data</h2>
+<p>We do not transfer or disclose your information to third parties for purposes other than the ones described in this policy. In practice there are no such purposes, so there is no transfer at all.</p>
+<p>Google user data reached by Cell Editor is not sold, rented, traded, published, or shared with anyone. There are no third parties involved in running this add-on: no service providers, no sub-processors, no hosting partners, no analytics providers, no advertising networks, no data brokers, and no affiliates. handyaddons operates no server that this data could be sent to.</p>
+<p>This is enforced technically rather than promised. The add-on does not request the <code>script.external_request</code> permission, which is the permission Google requires before any Apps Script code may contact an address on the internet. Without it, the add-on is incapable of transmitting anything anywhere, whatever its code might say.</p>
+<p>The same applies to legal requests. If we were compelled by a court or an authority to hand over your spreadsheet content, we would have nothing to hand over: we hold no copy of it, and no means of obtaining one.</p>
+
+<h2>8. How your data is protected</h2>
+<p>Security procedures are in place to protect the confidentiality of your data. The most important one is structural: your data never leaves Google.</p>
+<ul>
+<li><strong>It stays inside Google's infrastructure.</strong> The add-on runs in Google's Apps Script environment, inside your own Google account. The cell you edit travels between the spreadsheet and the editor panel and back again, and never crosses out of Google's systems.</li>
+<li><strong>It is encrypted in transit.</strong> Every exchange between the editor panel and the add-on takes place over HTTPS within Google's network. This website is served over HTTPS as well.</li>
+<li><strong>It is encrypted at rest.</strong> The few preferences described in section 5 are held by Google's own properties service, which Google encrypts at rest, in the pair &ldquo;this user, this add-on&rdquo;. No other add-on and no other user can read them.</li>
+<li><strong>Access is limited to the file you have open.</strong> The add-on requests <code>spreadsheets.currentonly</code>, the narrowest spreadsheet permission Google offers. It grants access to the one spreadsheet the add-on was opened in, and only while it is open. Every other file in your account is out of reach.</li>
+<li><strong>It cannot be sent anywhere.</strong> As explained in section 7, the add-on has no permission to make network requests.</li>
+<li><strong>Nobody at handyaddons can see it.</strong> We run no server, no database, and no backup of your content. There is no administrative console, no support tool, and no export through which anyone &mdash; including the developer &mdash; could reach what is in your spreadsheet. The access does not exist to be abused or stolen.</li>
+</ul>
+
+<h2>9. Data retention and deletion</h2>
+<p>We retain no Google user data, because we never receive any. The contents of a cell are read when you open the editor, held in memory while you work, and written back when you save. Nothing remains once the panel is closed.</p>
+<p>The four preference values described in section 5 are kept inside your own Google account for as long as the add-on stays installed. They are deleted automatically when you remove the add-on, which you can do at any time from the Extensions menu in Google Sheets. There are no archives, backups, or copies elsewhere, so nothing survives that deletion.</p>
+
+<h2>10. AI and machine learning</h2>
+<p>Google Workspace APIs are not used to develop, improve, or train non-personalized artificial intelligence or machine learning models. Google user data is never used, transferred, or sold for the development, improvement, or training of any AI or ML model, generalized or otherwise.</p>
+<p>Cell Editor contains no AI or machine learning model, is not built on one, and integrates with no AI service of any kind &mdash; not Google's own, not a third party's, not through an aggregator, gateway, or model hub, and not a self-hosted or offline model. It sends no prompt anywhere and receives no generated content. As with everything else in this policy, this is guaranteed by the absence of the <code>script.external_request</code> permission.</p>
+<p>One point deserves a plain explanation, because it is easy to misread from the source code. Cell Editor offers autocomplete and descriptions for the built-in functions of Google Sheets &mdash; around seven hundred of them, from <code>SUM</code> to <code>VLOOKUP</code>. Google has added <code>AI()</code> and <code>GEMINI()</code> to that list of built-in functions, so the add-on carries their names, a one-line description, and a link to Google's documentation, exactly as it does for every other function. That reference text is the only place those words appear. If you write such a formula, it is Google Sheets that evaluates it, under Google's own terms; the add-on merely writes the text of your formula into the cell, as it would with any other formula, and never calls Gemini or any other model itself.</p>
+
+<h2>11. Limited use disclosure</h2>
 <p>handyaddons' use and transfer of information received from Google APIs to any other app will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
 
-<h2>8. This website</h2>
+<h2>12. Third-party resources loaded by the editor</h2>
+<p>The editor panel is built on two open-source libraries, Quill and CodeMirror, which your browser downloads from two public code distribution networks: jsDelivr and cdnjs. These are static script and stylesheet files. No part of your spreadsheet, and no information about you, is sent to either of them.</p>
+<p>What they do see, as any website does when your browser requests a file from it, is your browser's IP address and the name of the file requested. We have no account with either service and receive nothing back from them. Their own policies apply to that request: <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net">jsDelivr</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a>, which operates cdnjs.</p>
+
+<h2>13. This website</h2>
 <p>handyaddons.com is a set of static pages served by GitHub Pages. It sets no cookies and runs no analytics. GitHub keeps standard server logs, which include visitors' IP addresses, as described in the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">GitHub Privacy Statement</a>. The site loads its typefaces from Google Fonts, which means your browser's IP address is visible to Google when a page loads.</p>
 
-<h2>9. Your rights</h2>
+<h2>14. Your rights</h2>
 <p>The GDPR gives you the right to ask what personal data is held about you, to have it corrected or erased, to object to its processing, and to receive a copy of it. The same rights, under different names, exist in the UK, California and a growing number of other places.</p>
 <p>In our case the honest answer to all of them is the same: we hold nothing to show you, correct, or erase. We have no account for you, no record of your use of the add-on, and no copy of anything from your documents. The preferences described in section 5 live inside your own Google account and disappear when you remove the add-on.</p>
 <p>You are welcome to ask anyway, at <a href="mailto:pobi.olex@gmail.com">pobi.olex@gmail.com</a>, and we will answer within thirty days. If the answer does not satisfy you, you may complain to your national data protection authority.</p>
 
-<h2>10. Links to other places</h2>
+<h2>15. Links to other places</h2>
 <p>The add-on links to Google's own reference pages, and this site links to Google's policies and to the Marketplace. Those destinations are not ours, and their own privacy practices apply once you arrive there.</p>
 
-<h2>11. Children</h2>
+<h2>16. Children</h2>
 <p>Cell Editor is a productivity tool and is not directed at children. We do not knowingly collect information from anyone, including children.</p>
 
-<h2>12. Changes to this policy</h2>
+<h2>17. Changes to this policy</h2>
 <p>If the add-on ever requests a new permission or begins handling data differently, this page will be updated before that change reaches you, and the date at the top will change with it.</p>
 
-<h2>13. Contact</h2>
+<h2>18. Contact</h2>
 <p>Questions about this policy, or about anything the add-on does with your data: <a href="mailto:pobi.olex@gmail.com">pobi.olex@gmail.com</a>. We answer in English and Ukrainian.</p>
 
 <p style="margin-top:40px"><a href="/cell-editor/">Back to Cell Editor</a> &middot; <a href="/terms/">Terms of use</a> &middot; <a href="/support/">Support</a></p>
@@ -122,8 +152,9 @@
     <a href="/support/">Support</a>
     <span class="sp">handyaddons.com</span>
   </div>
+  <p style="font-size:.8rem;opacity:.7;margin:.75rem 0 0">Google Sheets&trade; is a trademark of Google LLC.</p>
 </footer>
 <button type="button" class="totop" id="totop" aria-label="Back to top">&#8593;</button>
-<script src="/assets/js/site.js?v=68306b230d" defer></script>
+<script src="/assets/js/site.js?v=f38a54eefc" defer></script>
 </body>
 </html>

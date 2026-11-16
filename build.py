@@ -141,8 +141,8 @@ def cell_examples():
         ("D12", "Handover procedure",
          '<ol><li>Export the monthly report</li><li>Reconcile the totals against the ledger</li>'
          '<li>Send to the client and copy the account manager</li></ol>',
-         "A real numbered list inside one cell — the numbers come from the list, not typed in by hand, "
-         "so inserting a step renumbers the rest."),
+         "A numbered list inside one cell — Cell Editor puts the numbers in for you, "
+         "so you never type them by hand."),
         ("A3", "Definition with a source",
          '<b>Net 30</b> &mdash; payment falls due thirty days after the invoice date. '
          'See the <a href="#cells">payment policy</a>.',
@@ -150,7 +150,7 @@ def cell_examples():
         ("C5", "Product line with two links",
          'Steelcase Leap v2 &mdash; <a href="#cells">spec sheet</a> &middot; '
          '<a href="#cells">warranty terms</a>',
-         "Google Sheets attaches one link per cell on its own. Cell Editor attaches one per fragment."),
+         "Two links on two different words of the same cell, each added in the editor like in any document."),
     ]
     out = []
     for addr, label, body, note in rows:
@@ -315,6 +315,7 @@ FOOTER = f"""<footer class="wrap">
     <a href="/support/">Support</a>
     <span class="sp">handyaddons.com</span>
   </div>
+  <p style="font-size:.8rem;opacity:.7;margin:.75rem 0 0">Google Sheets&trade; is a trademark of Google LLC.</p>
 </footer>
 <button type="button" class="totop" id="totop" aria-label="Back to top">&#8593;</button>
 <script src="{asset("/assets/js/site.js")}" defer></script>
@@ -361,7 +362,7 @@ FAQ = [
     ('Does it work in Firefox?',
      'The sidebar does, fully. The separate window opens in Firefox as a modal dialog, so it cannot be dragged and the sheet behind it cannot be clicked — which means picking ranges with the mouse is unavailable there. Chrome, Edge and Safari have no such restriction.'),
     ('Can I put two different links in one cell?',
-     'Yes, and that is one thing Google Sheets will not do on its own. Select a fragment of text, attach a link to it, then select another fragment and attach a different one. Both survive the save.'),
+     'Yes. Select a fragment of text, attach a link to it, then select another fragment and attach a different one. Both survive the save.'),
     ('Will it change how my formula is stored?',
      'No. Line breaks and indentation you add in the editor are part of the formula text, exactly as they would be if you typed them in the formula bar. Google Sheets ignores them when calculating, so the result is identical — the formula is simply readable afterwards.'),
     ('What happens to my text if it is too long?',
@@ -412,7 +413,7 @@ ICONS = {
 FEATURES = [
     ("panel", "Sidebar or window", "A narrow panel that stays beside the sheet, or a wide resizable window for long content. One button switches, and your choice is remembered."),
     ("code", "Colored syntax", "Functions, references, numbers, strings and brackets each take their own color, and every distinct reference gets its own shade."),
-    ("hint", "Hints while you type", "Open a bracket and the function signature appears with the current argument highlighted, described in your spreadsheet's language."),
+    ("hint", "Hints while you type", "Open a bracket, or click any function inside a nested formula, and the hint for that exact function appears with the current argument highlighted — not at the start of the formula. Described in your spreadsheet's language."),
     ("pick", "Pick ranges with the mouse", "Put the cursor where the address belongs, select cells on the sheet, and the reference lands in the formula — cross-sheet names quoted correctly."),
     ("move", "Move without closing", "Step to the next cell with the arrow keys or type an address to jump, across sheets. Unsaved changes are flagged before you leave."),
     ("zoom", "Scale the text", "Enlarge the editor's font without changing the size of the characters in the cell itself. Built for long sessions and for low vision."),
@@ -526,7 +527,7 @@ def landing():
 <section id="formulas" class="wrap">
   <h2 class="reveal">Formulas you can actually read</h2>
   <p class="sec-lede reveal">A nested QUERY inside a SORT is unreadable on one line. Broken across lines and colored by token, it is just a formula again.</p>
-  {figure("formula.webp", "Cell Editor open in a window over a Google Sheet, showing a nested SORT and QUERY formula with colored syntax and line numbers", "Formula mode in a resizable window, with the text zoom controls and the launcher icon marked", "figure-full reveal")}
+  {figure("formula.webp", "Cell Editor open in a window over a Google Sheet, showing a nested SORT and QUERY formula with colored syntax and line numbers", "Formula mode in a resizable window, with the text zoom controls marked", "figure-full reveal")}
   <div class="points reveal">
     <div>
       <h3>Every reference in its own shade</h3>
@@ -598,7 +599,7 @@ def landing():
     {figure("rich-text.webp", "Cell Editor in text mode showing bold italic and colored text, numbered and bulleted lists, and a hyperlink being added", "Text mode: styles, lists and several links inside one cell", "shot")}
     <div>
       <h3>Formatting that survives the save</h3>
-      <p>Bold, italic, underline and strikethrough, text color on individual fragments, and a point size that sets the real size of the characters in the cell. Lists come out as lists.</p>
+      <p>Bold, italic, underline and strikethrough, text color on individual fragments, and a point size that sets the real size of the characters in the cell. Bulleted and numbered lists get their markers and numbers from the editor.</p>
       <ul class="mini">
         <li>Several hyperlinks attached to different fragments of one cell</li>
         <li>Clear formatting resets a fragment back to plain text</li>

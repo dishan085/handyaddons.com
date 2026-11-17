@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мультивалютний калькулятор — курси НБУ</title>
+    <meta name="description" content="Сума в різних валютах в одній валюті за офіційним курсом НБУ на будь-яку дату. Експорт в Excel і PDF.">
+    <link rel="canonical" href="https://handyaddons.com/multicurrency-calculator/">
+    <link rel="preconnect" href="https://nbu-rates.evorid-cf9.workers.dev">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            min-height: 100vh;
+            padding: 12px;
+        }
+        .container { max-width: 100%; margin: 0 auto; }
+        .header {
+            background: white; color: #2d3748; padding: 20px; border-radius: 12px;
+            margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .header h1 { font-size: 20px; margin-bottom: 16px; font-weight: 600; }
+        .header-controls { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .control-group { display: flex; flex-direction: column; gap: 6px; }
+        .control-group label { color: #4a5568; font-size: 12px; font-weight: 600; }
+        .control-group select, .control-group input {
+            padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 6px;
+            font-size: 14px; background: white; color: #2d3748; transition: all 0.3s ease;
+            width: 100%; touch-action: manipulation;
+        }
+        .control-group select:focus, .control-group input:focus {
+            outline: none; border-color: #64748b; box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.1);
+        }
+        /* Прапорець усередині поля вибору валюти */
+        .cur { position: relative; width: 100%; }
+        .cur .flag {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            width: 24px; height: 16px; border-radius: 2px; object-fit: cover;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.12); pointer-events: none;
+        }
+        .cur .badge {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            width: 24px; height: 16px; border-radius: 3px; font-size: 9px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; pointer-events: none;
+            color: #1f2937;
+        }
+        .cur select { padding-left: 42px !important; }
+        /* Власна стрілочка списку — з відступом від правого краю */
+        select {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important; background-position: right 14px center !important; background-size: 12px 8px !important;
+            padding-right: 40px !important; cursor: pointer;
+        }
+        .currency-rows {
+            display: flex; flex-direction: column; gap: 1px; margin-bottom: 16px;
+            background: #cbd5e0; border-radius: 6px; overflow: hidden;
+        }
+        .currency-row {
+            background: white; padding: 12px; display: flex; flex-direction: column; gap: 10px;
+            transition: all 0.2s;
+        }
+        .currency-row:hover { background: #f8fafc; }
+        .row-number { font-weight: 600; color: #64748b; font-size: 14px; }
+        .currency-row select, .currency-row input {
+            padding: 8px 10px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px;
+            transition: all 0.3s ease; background: white; width: 100%; touch-action: manipulation;
+        }
+        .currency-row select:focus, .currency-row input:focus {
+            outline: none; border-color: #64748b; box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.1);
+        }
+        .currency-row input[readonly] { background: #f1f5f9; color: #475569; cursor: default; }
+        .delete-btn {
+            width: 32px; height: 32px; background: white; color: #ef4444;
+            border: 2px solid #fee2e2; border-radius: 6px; cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+            align-self: flex-end;
+        }
+        .delete-btn:hover { background: #fef2f2; border-color: #ef4444; transform: scale(1.05); }
+        .add-row-btn {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white; border: none; padding: 12px 24px; border-radius: 6px;
+            font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(100, 116, 139, 0.3); width: 100%; text-align: center;
+        }
+        .add-row-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(100, 116, 139, 0.4); }
+        .add-row-btn:active { transform: translateY(0); }
+        .total-section {
+            background: white; border-radius: 12px; padding: 20px;
+            margin: 16px 0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .total-section h2 {
+            font-size: 12px; color: #718096;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .total-amount { font-size: 24px; font-weight: 600; color: #2d3748; margin-top: 10px; }
+        .action-buttons { display: flex; flex-direction: column; gap: 10px; }
+        .action-btn {
+            background: white; color: #64748b; border: 2px solid #e2e8f0;
+            padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center;
+            justify-content: center; gap: 6px; width: 100%; touch-action: manipulation;
+        }
+        .action-btn:hover {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white; border-color: #64748b; transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(100, 116, 139, 0.3);
+        }
+        .action-btn:active { transform: translateY(0); }
+        .action-btn[disabled] { opacity: .6; cursor: wait; transform: none; }
+        .loading {
+            display: none; text-align: center; padding: 12px; background: white;
+            border-radius: 6px; margin-bottom: 16px; color: #64748b;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .site-footer { text-align: center; color: #e2e8f0; font-size: 12px; margin: 24px 0 8px; }
+        .site-footer a { color: #fff; }
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            .container { max-width: 1200px; }
+            .header { padding: 32px 40px; border-radius: 16px; margin-bottom: 24px; }
+            .header h1 { font-size: 24px; margin-bottom: 24px; }
+            .header-controls { grid-template-columns: 1fr 1fr; gap: 24px; }
+            .control-group label { font-size: 14px; }
+            .control-group select, .control-group input { padding: 12px 16px; font-size: 14px; }
+            .currency-row {
+                padding: 20px 24px;
+                display: grid; grid-template-columns: 50px 1fr 1fr 1fr 1fr 50px; gap: 16px; align-items: center;
+            }
+            .currency-row select, .currency-row input { padding: 10px 14px; font-size: 14px; }
+            .delete-btn { width: 36px; height: 36px; font-size: 20px; }
+            .add-row-btn { padding: 14px 32px; font-size: 16px; width: auto; }
+            .total-section { padding: 32px 40px; border-radius: 16px; margin: 24px 0; }
+            .total-section h2 { font-size: 14px; }
+            .total-amount { font-size: 32px; }
+            .action-buttons { flex-direction: row; gap: 12px; }
+            .action-btn { padding: 12px 24px; font-size: 14px; width: auto; }
+            .loading { padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💱 Мультивалютний калькулятор</h1>
+            <div class="header-controls">
+                <div class="control-group">
+                    <label for="baseCurrency">Основна валюта</label>
+                    <div class="cur" id="baseCur">
+                        <span class="flag-slot"></span>
+                        <select id="baseCurrency"></select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="calcDate">Дата розрахунку</label>
+                    <input type="date" id="calcDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">Завантаження курсів валют...</div>
+        <div class="currency-rows" id="currencyRows"></div>
+        <button class="add-row-btn" onclick="addRow()">+ Додати рядок</button>
+
+        <div class="total-section">
+            <h2>Загальна сума</h2>
+            <div class="total-amount" id="totalAmount">0,00 UAH</div>
+            <button class="action-btn" style="position: absolute; bottom: 20px; right: 20px; width: auto; padding: 8px 16px; font-size: 13px;" onclick="copyToClipboard(this)">📋 Копіювати</button>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="exportExcel(this)">📊 Завантажити Excel</button>
+            <button class="action-btn" onclick="exportPDF(this)">📄 Завантажити PDF</button>
+            <button class="action-btn" onclick="printReport()">🖨️ Друк</button>
+        </div>
+
+        <div class="site-footer">Курси — Національний банк України · <a href="https://handyaddons.com/">handyaddons.com</a></div>
+    </div>
+
+    <script>
+        // Кеш курсів НБУ (Cloudflare Worker); якщо недоступний — напряму з НБУ
+        const RATES_API = 'https://nbu-rates.evorid-cf9.workers.dev/';
+        const NBU_API = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange';
+
+        // Валюта → прапорець (файл flags/<код>.svg); метали й СПЗ — кольоровий значок
+        const FLAG = {
+            UAH:'ua', AED:'ae', AUD:'au', AZN:'az', BDT:'bd', CAD:'ca', CHF:'ch', CNY:'cn', CZK:'cz',
+            DKK:'dk', DZD:'dz', EGP:'eg', EUR:'eu', GBP:'gb', GEL:'ge', HKD:'hk', HUF:'hu', IDR:'id',
+            ILS:'il', INR:'in', JPY:'jp', KRW:'kr', KZT:'kz', LBP:'lb', MDL:'md', MXN:'mx', MYR:'my',
+            NOK:'no', NZD:'nz', PLN:'pl', RON:'ro', RSD:'rs', SAR:'sa', SEK:'se', SGD:'sg', THB:'th',
+            TND:'tn', TRY:'tr', USD:'us', VND:'vn', ZAR:'za'
+        };
+        const BADGE = {
+            XAU: ['Au', '#facc15'], XAG: ['Ag', '#cbd5e1'], XPT: ['Pt', '#e5e7eb'],
+            XPD: ['Pd', '#d6d3d1'], XDR: ['SDR', '#bfdbfe']
+        };
+        function flagHtml(code) {
+            if (FLAG[code]) return `<img class="flag" src="flags/${FLAG[code]}.svg" alt="">`;
+            const b = BADGE[code];
+            if (b) return `<span class="badge" style="background:${b[1]}">${b[0]}</span>`;
+            return `<span class="badge" style="background:#e2e8f0">${code.slice(0, 2)}</span>`;
+        }
+        function setFlag(wrapper, code) {
+            wrapper.querySelector('.flag-slot').innerHTML = flagHtml(code);
+        }
+
+        let currencies = [];
+        let exchangeRates = {};
+        let rowData = [];
+        let baseCurrency = 'UAH';
+
+        // Функція форматування числа з комою
+        function formatNumber(num, decimals) {
+            return num.toFixed(decimals).replace('.', ',');
+        }
+
+        // Функція парсингу числа з коми на крапку
+        function parseNumber(str) {
+            if (typeof str === 'number') return str;
+            return parseFloat(String(str).replace(/\s/g, '').replace(',', '.')) || 0;
+        }
+
+        // Сьогодні за Києвом (а не за UTC)
+        const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Kyiv' }).format(new Date());
+        document.getElementById('calcDate').value = today;
+        document.getElementById('calcDate').max = today;
+        document.getElementById('calcDate').min = '2013-01-01';
+
+        async function fetchRates(date) {
+            try {
+                const res = await fetch(`${RATES_API}?date=${date}`);
+                if (!res.ok) throw new Error(res.status);
+                return await res.json();
+            } catch (e) {
+                const res = await fetch(`${NBU_API}?date=${date}&json`);
+                return await res.json();
+            }
+        }
+
+        async function loadCurrencies() {
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const data = await loadExchangeRates();
+                currencies = data.map(i => ({ code: i.cc, name: i.txt }));
+                currencies.unshift({ code: 'UAH', name: 'Українська гривня' });
+
+                const euroPriority = ['UAH', 'EUR', 'USD', 'GBP', 'PLN', 'CHF', 'CZK'];
+                currencies.sort((a, b) => {
+                    const priority = code => euroPriority.includes(code) ? euroPriority.indexOf(code) : 999;
+                    return priority(a.code) - priority(b.code);
+                });
+
+                updateBaseCurrencySelect();
+                addRow();
+            } catch (e) {
+                alert('Помилка завантаження валют: ' + e.message);
+            }
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function updateBaseCurrencySelect() {
+            const select = document.getElementById('baseCurrency');
+            select.innerHTML = currencies.map(c =>
+                `<option value="${c.code}">${c.code} — ${c.name}</option>`
+            ).join('');
+            select.value = 'UAH';
+            setFlag(document.getElementById('baseCur'), 'UAH');
+        }
+
+        async function loadExchangeRates() {
+            const date = document.getElementById('calcDate').value.replace(/-/g, '');
+            const data = await fetchRates(date);
+            exchangeRates = { 'UAH': 1 };
+            data.forEach(i => { exchangeRates[i.cc] = i.rate; });
+            return data;
+        }
+
+        function addRow() {
+            const r = { id: Date.now(), currency: 'USD', amount: 0, rate: 0, converted: 0 };
+            rowData.push(r);
+            renderRow(r);
+        }
+
+        function renderRow(r) {
+            const container = document.getElementById('currencyRows');
+            const div = document.createElement('div');
+            div.className = 'currency-row';
+            div.id = `row-${r.id}`;
+            div.innerHTML = `
+                <div class="row-number">${rowData.length}</div>
+                <div class="cur">
+                    <span class="flag-slot">${flagHtml(r.currency)}</span>
+                    <select onchange="updateCurrency(${r.id}, this.value)">
+                        ${currencies.map(c => `<option value="${c.code}" ${c.code===r.currency?'selected':''}>${c.code} — ${c.name}</option>`).join('')}
+                    </select>
+                </div>
+                <input type="text" inputmode="decimal" value="${formatNumber(r.amount, 2)}" oninput="updateAmount(${r.id}, this.value)" placeholder="Сума">
+                <input type="text" readonly id="rate-${r.id}" value="${formatNumber(r.rate, 4)}" placeholder="Курс">
+                <input type="text" readonly id="converted-${r.id}" value="${formatNumber(r.converted, 2)}" placeholder="В основній валюті">
+                <button class="delete-btn" onclick="deleteRow(${r.id})" title="Видалити рядок">×</button>
+            `;
+            container.appendChild(div);
+            updateRate(r.id);
+        }
+
+        function updateCurrency(id, val) {
+            const r = rowData.find(x => x.id === id);
+            if (r) {
+                r.currency = val;
+                setFlag(document.getElementById(`row-${id}`).querySelector('.cur'), val);
+                updateRate(id);
+            }
+        }
+
+        function updateAmount(id, val) {
+            const r = rowData.find(x => x.id === id);
+            if (r) { r.amount = parseNumber(val); calculate(); }
+        }
+
+        function updateRate(id) {
+            const r = rowData.find(x => x.id === id);
+            if (!r) return;
+            const rate = getExchangeRate(r.currency);
+            r.rate = parseFloat(rate.toFixed(4));
+            const rateEl = document.getElementById(`rate-${id}`);
+            if (rateEl) rateEl.value = formatNumber(r.rate, 4);
+            calculate();
+        }
+
+        function deleteRow(id) {
+            rowData = rowData.filter(r => r.id !== id);
+            const rowEl = document.getElementById(`row-${id}`);
+            if (rowEl) rowEl.remove();
+            calculate();
+            renumberRows();
+        }
+
+        function renumberRows() {
+            const rows = document.querySelectorAll('.currency-row');
+            rows.forEach((row, index) => {
+                const numEl = row.querySelector('.row-number');
+                if (numEl) numEl.textContent = index + 1;
+            });
+        }
+
+        function getExchangeRate(from) {
+            const base = document.getElementById('baseCurrency').value;
+            if (from === base) return 1;
+            const fr = exchangeRates[from] || 1;
+            const br = exchangeRates[base] || 1;
+            return base === 'UAH' ? fr : (from === 'UAH' ? 1/br : fr/br);
+        }
+
+        function calculate() {
+            let total = 0;
+            const base = document.getElementById('baseCurrency').value;
+            rowData.forEach(r => {
+                const rate = getExchangeRate(r.currency);
+                r.rate = parseFloat(rate.toFixed(4));
+                r.converted = parseFloat((r.amount * r.rate).toFixed(2));
+                total += r.converted;
+                const rateEl = document.getElementById(`rate-${r.id}`);
+                const convEl = document.getElementById(`converted-${r.id}`);
+                if (rateEl) rateEl.value = formatNumber(r.rate, 4);
+                if (convEl) convEl.value = formatNumber(r.converted, 2);
+            });
+            document.getElementById('totalAmount').textContent = `${formatNumber(total, 2)} ${base}`;
+        }
+
+        document.getElementById('calcDate').addEventListener('change', async () => {
+            try { await loadExchangeRates(); } catch (e) { alert('Не вдалося завантажити курси на цю дату'); }
+            rowData.forEach(r => updateRate(r.id));
+        });
+
+        document.getElementById('baseCurrency').addEventListener('change', () => {
+            baseCurrency = document.getElementById('baseCurrency').value;
+            setFlag(document.getElementById('baseCur'), baseCurrency);
+            rowData.forEach(r => updateRate(r.id));
+        });
+
+        // Ініціалізація
+        loadCurrencies();
+
+        // === ФУНКЦІЯ КОПІЮВАННЯ В БУФЕР ===
+        function copyToClipboard(btn) {
+            const totalText = document.getElementById('totalAmount').textContent;
+            const originalText = btn.innerHTML;
+            const done = () => {
+                btn.innerHTML = '✓ Скопійовано';
+                btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                btn.style.borderColor = '#10b981';
+                btn.style.color = 'white';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                    btn.style.color = '';
+                }, 2000);
+            };
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(totalText).then(done).catch(err => alert('Помилка копіювання: ' + err));
+            } else {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = totalText;
+                tempInput.style.position = 'fixed';
+                tempInput.style.opacity = '0';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try { document.execCommand('copy'); done(); } catch (err) { alert('Помилка копіювання: ' + err); }
+                document.body.removeChild(tempInput);
+            }
+        }
+
+        // === СПІЛЬНІ ДАНІ ЗВІТУ (друк, Excel, PDF) ===
+        function reportInfo() {
+            const date = document.getElementById('calcDate').value;
+            const baseCurr = document.getElementById('baseCurrency').value;
+            return {
+                date,
+                formattedDate: new Date(date + 'T00:00:00').toLocaleDateString('uk-UA'),
+                baseCurr,
+                baseCurrName: currencies.find(c => c.code === baseCurr)?.name || baseCurr,
+                total: document.getElementById('totalAmount').textContent
+            };
+        }
+
+        function reportHtml() {
+            const i = reportInfo();
+            let rows = '';
+            rowData.forEach((r, index) => {
+                rows += `<tr><td>${index + 1}</td><td>${r.currency}</td><td>${formatNumber(r.amount, 2)}</td><td>${formatNumber(r.rate, 4)}</td><td>${formatNumber(r.converted, 2)}</td></tr>`;
+            });
+            return `
+                <style>
+                    .rep { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; color: #2d3748; }
+                    .rep h1 { margin-bottom: 10px; font-weight: 600; text-align: left; font-size: 18px; }
+                    .rep .subtitle { color: #4a5568; margin-bottom: 20px; text-align: left; font-size: 12px; }
+                    .rep table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+                    .rep th, .rep td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; font-size: 12px; }
+                    .rep th { background: #64748b; color: white; font-weight: 600; }
+                    .rep .total { font-size: 16px; font-weight: 600; margin: 15px 0; text-align: left; }
+                    .rep .footer { margin-top: 20px; color: #718096; font-size: 12px; text-align: left; }
+                </style>
+                <div class="rep">
+                    <h1>Мультивалютний розрахунок</h1>
+                    <div class="subtitle">Основна валюта: ${i.baseCurrName}</div>
+                    <table><tr><th>№</th><th>Валюта</th><th>Сума</th><th>Курс</th><th>В основній валюті</th></tr>${rows}</table>
+                    <div class="total">Загальна сума: ${i.total}</div>
+                    <div class="footer">Розрахунок виконано на дату ${i.formattedDate} за курсом Національного банку України</div>
+                </div>`;
+        }
+
+        // Бібліотеки завантажуються лише при натисканні (сторінка відкривається швидко)
+        function loadScript(src, integrity) {
+            return new Promise((resolve, reject) => {
+                if (document.querySelector(`script[src="${src}"]`)) return resolve();
+                const s = document.createElement('script');
+                s.src = src; s.integrity = integrity; s.crossOrigin = 'anonymous';
+                s.onload = resolve; s.onerror = () => reject(new Error('не вдалося завантажити бібліотеку'));
+                document.head.appendChild(s);
+            });
+        }
+        async function busy(btn, fn) {
+            const t = btn.innerHTML; btn.disabled = true; btn.innerHTML = '⏳ Готую файл...';
+            try { await fn(); } catch (e) { alert('Помилка: ' + e.message); }
+            btn.disabled = false; btn.innerHTML = t;
+        }
+
+        // === ЕКСПОРТ В EXCEL ===
+        function exportExcel(btn) {
+            busy(btn, async () => {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+                    'sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw');
+                const i = reportInfo();
+                const aoa = [
+                    ['Мультивалютний розрахунок'],
+                    [`Основна валюта: ${i.baseCurrName} (${i.baseCurr})`],
+                    [`Дата курсу НБУ: ${i.formattedDate}`],
+                    [],
+                    ['№', 'Валюта', 'Сума', 'Курс', `В основній валюті (${i.baseCurr})`]
+                ];
+                rowData.forEach((r, n) => aoa.push([n + 1, r.currency, r.amount, r.rate, r.converted]));
+                const totalNum = rowData.reduce((s, r) => s + r.converted, 0);
+                aoa.push([], ['', '', '', 'Загальна сума', Math.round(totalNum * 100) / 100]);
+                const ws = XLSX.utils.aoa_to_sheet(aoa);
+                ws['!cols'] = [{ wch: 5 }, { wch: 10 }, { wch: 14 }, { wch: 14 }, { wch: 24 }];
+                const first = 5, last = 5 + rowData.length;
+                for (let rr = first; rr <= last + 1; rr++) {
+                    ['C', 'E'].forEach(col => { const c = ws[col + (rr + 1)]; if (c && typeof c.v === 'number') c.z = '#,##0.00'; });
+                    const d = ws['D' + (rr + 1)]; if (d && typeof d.v === 'number') d.z = '0.0000';
+                }
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Розрахунок');
+                XLSX.writeFile(wb, `multicurrency-${i.date}.xlsx`);
+            });
+        }
+
+        // === ЕКСПОРТ В PDF ===
+        // Справжній PDF із текстом (jsPDF + таблиця), шрифт PT Sans з кирилицею — з папки fonts/
+        async function fontBase64(url) {
+            const buf = await (await fetch(url)).arrayBuffer();
+            let bin = '';
+            const bytes = new Uint8Array(buf);
+            for (let k = 0; k < bytes.length; k += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(k, k + 0x8000));
+            return btoa(bin);
+        }
+        function exportPDF(btn) {
+            busy(btn, async () => {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+                    'sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk');
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js',
+                    'sha384-fCAW/rDWORTbQXSiB7mOg0QtQ5c+r0f544y6XoKjuVva0nMBlCpNUjiFeG5iMdS3');
+                const [reg, bold] = await Promise.all([fontBase64('fonts/PTSans-Regular.ttf'), fontBase64('fonts/PTSans-Bold.ttf')]);
+                const i = reportInfo();
+                const doc = new jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+                doc.addFileToVFS('PTSans-Regular.ttf', reg); doc.addFont('PTSans-Regular.ttf', 'PTSans', 'normal');
+                doc.addFileToVFS('PTSans-Bold.ttf', bold); doc.addFont('PTSans-Bold.ttf', 'PTSans', 'bold');
+
+                const L = 15;
+                doc.setTextColor(45, 55, 72);
+                doc.setFont('PTSans', 'bold'); doc.setFontSize(16);
+                doc.text('Мультивалютний розрахунок', L, 20);
+                doc.setFont('PTSans', 'normal'); doc.setFontSize(10); doc.setTextColor(74, 85, 104);
+                doc.text(`Основна валюта: ${i.baseCurrName} (${i.baseCurr})`, L, 28);
+                doc.text(`Дата курсу: ${i.formattedDate} · Національний банк України`, L, 34);
+
+                doc.autoTable({
+                    startY: 40,
+                    margin: { left: L, right: L },
+                    head: [['№', 'Валюта', 'Сума', 'Курс', `В основній валюті (${i.baseCurr})`]],
+                    body: rowData.map((r, n) => [n + 1, r.currency, formatNumber(r.amount, 2), formatNumber(r.rate, 4), formatNumber(r.converted, 2)]),
+                    styles: { font: 'PTSans', fontSize: 10, halign: 'center', textColor: [45, 55, 72], lineColor: [226, 232, 240], lineWidth: 0.2 },
+                    headStyles: { font: 'PTSans', fontStyle: 'bold', fillColor: [100, 116, 139], textColor: 255 },
+                    alternateRowStyles: { fillColor: [248, 250, 252] }
+                });
+
+                let y = doc.lastAutoTable.finalY + 10;
+                doc.setFont('PTSans', 'bold'); doc.setFontSize(13); doc.setTextColor(45, 55, 72);
+                doc.text(`Загальна сума: ${i.total}`, L, y);
+                doc.setFont('PTSans', 'normal'); doc.setFontSize(9); doc.setTextColor(113, 128, 150);
+                doc.text(`Розрахунок виконано на дату ${i.formattedDate} за курсом Національного банку України · handyaddons.com/multicurrency-calculator`, L, y + 8, { maxWidth: 180 });
+                doc.save(`multicurrency-${i.date}.pdf`);
+            });
+        }
+
+        // === ФУНКЦІЯ ДРУКУ ===
+        function printReport() {
+            const content = `<html><head><meta charset="UTF-8"><title>Мультивалютний розрахунок</title></head><body>${reportHtml()}</body></html>`;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(content);
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+</body>
+</html>

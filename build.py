@@ -261,6 +261,7 @@ SECTION_LINKS = [
     ("Functions", "/cell-editor/#functions"),
     ("Cells", "/cell-editor/#cells"),
     ("Checks", "/cell-editor/#checks"),
+    ("Video", "/cell-editor/#video"),
     ("Screenshots", "/cell-editor/#screenshots"),
     ("Languages", "/cell-editor/#languages"),
     ("FAQ", "/cell-editor/#faq"),
@@ -616,7 +617,7 @@ def landing():
 <section id="video" class="wrap">
   <h2>One minute, start to finish</h2>
   <p class="sec-lede">The hint for the exact function, error checks before saving, bigger text and rich text in a cell.</p>
-  <div class="video reveal" style="border:0;padding:0;overflow:hidden">
+  <div class="video reveal" style="border:0;padding:0;overflow:hidden;max-width:880px;margin:0 auto">
     <iframe src="https://www.youtube-nocookie.com/embed/vIbbjFnrEWA" title="Cell Editor for Google Sheets&trade; — one-minute demo" style="width:100%;height:100%;border:0" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
 </section>
